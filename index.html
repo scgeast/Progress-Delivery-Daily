@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Dashboard</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Chart.js Data Labels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <!-- html2canvas untuk download image -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <!-- SheetJS (XLSX) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        /* FULL SCREEN */
+        .app-wrapper {
+            max-width: 100vw;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* HEADER BLOOD MOON */
+        .header-blood {
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 40%, #3A0000 100%);
+            padding: 0.5rem 2rem 0.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid #CC3333;
+            flex-shrink: 0;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+        }
+        .header-blood::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 60, 60, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+        .header-blood::after {
+            content: '';
+            position: absolute;
+            bottom: -60%;
+            left: -10%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(200, 50, 50, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseGlow 6s ease-in-out infinite reverse;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .truck-icon {
+            font-size: 2rem;
+            display: inline-block;
+            animation: truckMove 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(255, 100, 50, 0.4));
+            line-height: 1;
+        }
+        @keyframes truckMove {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(6px) rotate(-2deg); }
+            75% { transform: translateX(-4px) rotate(2deg); }
+        }
+        
+        .header-title {
+            color: #FFE8E8;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 20px rgba(255, 50, 50, 0.3);
+        }
+        .header-title span {
+            color: #FF6B6B;
+            font-weight: 300;
+        }
+        .header-sub {
+            color: rgba(255, 200, 200, 0.7);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-top: 0;
+        }
+        .header-badge {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            padding: 0.15rem 0.8rem;
+            border-radius: 40px;
+            color: #FFD4D4;
+            font-size: 0.6rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-badge .dot {
+            width: 5px;
+            height: 5px;
+            background: #FF4444;
+            border-radius: 50%;
+            display: inline-block;
+            animation: blinkDot 1.2s ease-in-out infinite;
+        }
+        @keyframes blinkDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+        
+        /* UPLOAD AREA */
+        .upload-area {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 0.2rem 0.7rem 0.2rem 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: 0.2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .upload-area:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .upload-area label {
+            font-weight: 500;
+            font-size: 0.7rem;
+            color: #FFE8E8;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.15rem 0.7rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-block;
+        }
+        .upload-area label:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        #file-input {
+            display: none;
+        }
+        .file-status {
+            color: rgba(255, 200, 200, 0.8);
+            font-size: 0.6rem;
+            font-weight: 300;
+            white-space: nowrap;
+        }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 0.6rem 2rem 0.8rem 2rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        /* Filter */
+        .filter-area {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            padding: 0.3rem 1rem;
+            background: #f8faff;
+            border-radius: 14px;
+            border: none;
+            flex-shrink: 0;
+        }
+        .filter-area label {
+            font-weight: 500;
+            color: #1d3b5c;
+            font-size: 0.8rem;
+        }
+        .filter-area select {
+            min-width: 150px;
+            max-width: 300px;
+            padding: 0.25rem 0.6rem;
+            border-radius: 10px;
+            border: 1px solid #cbdbe9;
+            background: white;
+            font-size: 0.8rem;
+            color: #1a3a5a;
+            outline: none;
+            transition: 0.15s;
+            flex: 1;
+        }
+        .filter-area select:focus {
+            border-color: #8B0000;
+            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.15);
+        }
+        .filter-area .filter-actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+        .filter-area .btn-filter {
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            border: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            background: #e6edf5;
+            color: #1d3b5c;
+        }
+        .filter-area .btn-filter:hover {
+            background: #d0ddea;
+        }
+        .filter-area .btn-filter.primary {
+            background: #8B0000;
+            color: white;
+        }
+        .filter-area .btn-filter.primary:hover {
+            background: #6B0000;
+        }
+        .filter-badge {
+            display: inline-block;
+            background: #f0e0e0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            color: #5C0000;
+        }
+
+        /* DOWNLOAD BUTTON */
+        .download-btn {
+            background: #2a7de1;
+            color: white;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .download-btn:hover {
+            background: #1a5fa8;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 0.6rem 1rem 0.8rem;
+            box-shadow: 0 2px 10px rgba(0, 20, 40, 0.05);
+            border: 1px solid #e6edf5;
+            flex-shrink: 0;
+        }
+        .section-card h3 {
+            font-weight: 600;
+            color: #1d3b5c;
+            letter-spacing: -0.01em;
+            margin-top: 0;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* TIMESTAMP di pojok kanan judul Data Plant */
+        .region-timestamp {
+            font-size: 0.65rem;
+            color: #000000;
+            font-weight: 500;
+            background: transparent;
+            padding: 0;
+            border: none;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .region-timestamp .label {
+            color: #4f6b86;
+            font-weight: 400;
+        }
+        
+        /* TABEL */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e9eef4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            min-width: 280px;
+        }
+        th {
+            background: #f2f6fd;
+            color: #1f3d5e;
+            font-weight: 600;
+            padding: 0.3rem 0.5rem;
+            text-align: left;
+            border-bottom: 2px solid #d8e2ef;
+            white-space: nowrap;
+        }
+        td {
+            padding: 0.25rem 0.5rem;
+            border-bottom: 1px solid #e6ecf4;
+            color: #1f3349;
+            text-align: left !important;
+        }
+        tr:last-child td { border-bottom: none; }
+        
+        th, td {
+            text-align: left !important;
+        }
+        th:first-child, td:first-child { padding-left: 0.6rem; }
+        th:last-child, td:last-child { padding-right: 0.6rem; }
+        th:nth-child(1), td:nth-child(1) { width: 38%; }
+        th:nth-child(2), td:nth-child(2) { width: 20%; }
+        th:nth-child(3), td:nth-child(3) { width: 20%; }
+        th:nth-child(4), td:nth-child(4) { width: 22%; }
+        
+        .remain-badge {
+            font-weight: 600;
+            color: #0f4b7a;
+        }
+        .remain-positive { color: #0b7e4b; }
+        .remain-negative { color: #c0392b; }
+        
+        .chart-container {
+            position: relative;
+            height: 280px;
+            margin-top: 0.1rem;
+            width: 100%;
+        }
+        .empty-state {
+            color: #7a8fa5;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            background: #f9fcff;
+            border-radius: 16px;
+        }
+        .chart-caption {
+            margin-top: 0.2rem;
+            font-size: 0.78rem;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .caption-plant { color: #4f6b86; font-weight: 600; }
+        .caption-order { color: #2a7de1; }
+        .caption-delivered { color: #26b978; }
+        .caption-remain { color: #FF8C00; }
+        .caption-separator { color: #b0c0d0; font-weight: 300; padding: 0 4px; }
+        
+        /* CHART HEADER */
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.1rem;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+        .chart-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1d3b5c;
+            margin-bottom: 0;
+        }
+        
+        /* LAYOUT TABLE + BAR CHART - 50:50 */
+        .data-plant-layout {
+            display: flex;
+            gap: 1.2rem;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+        .data-plant-layout .table-wrapper {
+            flex: 1;
+            min-width: 280px;
+        }
+        .data-plant-layout .chart-remain-wrapper {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-remain-wrapper .chart-remain-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1d3b5c;
+            text-align: left;
+            margin-bottom: 0.1rem;
+        }
+        .chart-remain-container {
+            position: relative;
+            height: 230px;
+            width: 100%;
+            flex: 1;
+        }
+        
+        /* Hilangkan judul Visualisasi Data */
+        .section-card-chart h3 {
+            display: none;
+        }
+        
+        /* Scrollbar */
+        .main-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .main-content::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+        .main-content::-webkit-scrollbar-thumb {
+            background: #8B0000;
+            border-radius: 10px;
+        }
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #6B0000;
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- HEADER -->
+    <div class="header-blood">
+        <div class="header-content">
+            <div class="header-left">
+                <span class="truck-icon">🚛</span>
+                <div>
+                    <div class="header-title">Plant <span>Dashboard</span></div>
+                    <div class="header-sub">Monitoring & Analisis Data Plant</div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <div class="header-badge">
+                    <span class="dot"></span>
+                    <span>LIVE</span>
+                </div>
+                <div class="upload-area" id="uploadArea">
+                    <label for="file-input">📁 Upload</label>
+                    <input type="file" id="file-input" accept=".xlsx,.xls">
+                    <span class="file-status" id="fileStatus">File</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="dashboardContent">
+        <!-- Filter -->
+        <div class="filter-area" id="filterArea">
+            <label for="plantFilter">⚙️ Filter Plant:</label>
+            <select id="plantFilter" multiple size="2">
+                <option value="__all__" selected>Semua Plant</option>
+            </select>
+            <div class="filter-actions">
+                <button class="btn-filter primary" id="applyFilterBtn">Terapkan</button>
+                <button class="btn-filter" id="resetFilterBtn">Reset</button>
+            </div>
+            <span class="filter-badge" id="filterBadge">Menampilkan: semua</span>
+            <button class="download-btn" id="downloadBtn">⬇️ Download Image</button>
+        </div>
+
+        <!-- Tabel + Bar Chart Remain (50:50) -->
+        <div class="section-card" style="flex-shrink: 0;" id="captureArea">
+            <h3>
+                <span id="regionTitle">Data Plant</span>
+                <span class="region-timestamp" id="regionTimestamp">
+                    <span class="label">Last Update</span>
+                    <span id="dateTimeText">--/--/---- --:--:--</span>
+                </span>
+            </h3>
+            <div class="data-plant-layout">
+                <div class="table-wrapper">
+                    <div id="tableContainer">
+                        <div class="empty-state">⬆ Upload file untuk menampilkan data</div>
+                    </div>
+                </div>
+                <div class="chart-remain-wrapper">
+                    <div class="chart-remain-title">Volume Remain</div>
+                    <div class="chart-remain-container">
+                        <canvas id="remainBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart: Order vs Delivered -->
+        <div class="section-card section-card-chart" style="flex: 1; min-height: 300px;" id="captureArea2">
+            <div class="chart-header">
+                <div class="chart-title">Order vs Delivered</div>
+            </div>
+            <div class="chart-container">
+                <canvas id="plantChart"></canvas>
+            </div>
+            
+            <div class="chart-caption" id="chartCaption">
+                Belum ada data chart
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function() {
+        // DOM refs
+        const fileInput = document.getElementById('file-input');
+        const fileStatus = document.getElementById('fileStatus');
+        const tableContainer = document.getElementById('tableContainer');
+        const chartCaption = document.getElementById('chartCaption');
+        const plantFilter = document.getElementById('plantFilter');
+        const applyFilterBtn = document.getElementById('applyFilterBtn');
+        const resetFilterBtn = document.getElementById('resetFilterBtn');
+        const filterBadge = document.getElementById('filterBadge');
+        const dateTimeText = document.getElementById('dateTimeText');
+        const regionTitle = document.getElementById('regionTitle');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        let chartInstance = null;
+        let remainBarChartInstance = null;
+        let allPlants = [];
+        let filteredPlants = [];
+        let regionName = 'Data Plant';
+
+        Chart.register(ChartDataLabels);
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            dateTimeText.textContent = now.toLocaleString('id-ID', options);
+        }
+        
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        function isNumeric(val) {
+            return val !== null && val !== '' && !isNaN(parseFloat(val)) && isFinite(val);
+        }
+
+        // Parse Excel
+        function parseExcelToPlants(workbook) {
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
+
+            let headerRowIndex = -1;
+            let colPlant = -1, colOrder = -1, colDelivered = -1;
+            let detectedRegion = '';
+
+            // Cari region
+            for (let i = 0; i < Math.min(data.length, 10); i++) {
+                const row = data[i];
+                if (!row || row.length === 0) continue;
+                const firstCell = String(row[0] || '').trim();
+                if (firstCell && !firstCell.toLowerCase().includes('plant') && !firstCell.toLowerCase().includes('region')) {
+                    if (firstCell.length > 0 && !isNumeric(firstCell)) {
+                        detectedRegion = firstCell;
+                        break;
+                    }
+                }
+            }
+
+            // Cari header
+            for (let i = 0; i < data.length; i++) {
+                const row = data[i];
+                if (!row || row.length === 0) continue;
+                const findCol = (keyword) => {
+                    for (let j = 0; j < row.length; j++) {
+                        const cell = String(row[j] || '').trim().toLowerCase();
+                        if (cell.includes(keyword)) return j;
+                    }
+                    return -1;
+                };
+                const pIdx = findCol('plant name');
+                const oIdx = findCol('order');
+                const dIdx = findCol('delivered');
+
+                if (pIdx !== -1 && oIdx !== -1 && dIdx !== -1) {
+                    headerRowIndex = i;
+                    colPlant = pIdx;
+                    colOrder = oIdx;
+                    colDelivered = dIdx;
+                    break;
+                }
+            }
+
+            if (headerRowIndex === -1) {
+                for (let i = 0; i < Math.min(data.length, 20); i++) {
+                    const row = data[i];
+                    if (!row) continue;
+                    const rowStr = row.map(String).join(' ').toLowerCase();
+                    if (rowStr.includes('plant') && rowStr.includes('order') && rowStr.includes('delivered')) {
+                        const findCol = (keyword) => {
+                            for (let j = 0; j < row.length; j++) {
+                                const cell = String(row[j] || '').trim().toLowerCase();
+                                if (cell.includes(keyword)) return j;
+                            }
+                            return -1;
+                        };
+                        const pIdx = findCol('plant');
+                        const oIdx = findCol('order');
+                        const dIdx = findCol('delivered');
+                        if (pIdx !== -1 && oIdx !== -1 && dIdx !== -1) {
+                            headerRowIndex = i;
+                            colPlant = pIdx;
+                            colOrder = oIdx;
+                            colDelivered = dIdx;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (headerRowIndex === -1) {
+                for (let i = 0; i < Math.min(data.length, 15); i++) {
+                    const row = data[i];
+                    if (!row || row.length < 6) continue;
+                    const cellC = String(row[2] || '').trim();
+                    const cellD = String(row[3] || '').trim();
+                    const cellF = String(row[5] || '').trim();
+                    if (cellC.length > 0 && (isNumeric(cellD) || isNumeric(cellF))) {
+                        headerRowIndex = i;
+                        colPlant = 2;
+                        colOrder = 3;
+                        colDelivered = 5;
+                        break;
+                    }
+                }
+            }
+
+            if (headerRowIndex === -1) {
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    if (!row) continue;
+                    const cellC = String(row[2] || '').trim().toLowerCase();
+                    if (cellC.includes('plant')) {
+                        headerRowIndex = i;
+                        colPlant = 2;
+                        colOrder = 3;
+                        colDelivered = 5;
+                        break;
+                    }
+                }
+            }
+
+            const plants = [];
+            if (headerRowIndex !== -1 && colPlant !== -1 && colOrder !== -1 && colDelivered !== -1) {
+                for (let i = headerRowIndex + 1; i < data.length; i++) {
+                    const row = data[i];
+                    if (!row || row.length === 0) continue;
+                    const plantName = String(row[colPlant] || '').trim();
+                    if (!plantName || plantName.length === 0) continue;
+
+                    const orderVal = parseFloat(row[colOrder]);
+                    const delVal = parseFloat(row[colDelivered]);
+
+                    if (!isNaN(orderVal) && !isNaN(delVal)) {
+                        plants.push({
+                            name: plantName,
+                            order: orderVal,
+                            delivered: delVal,
+                            remain: orderVal - delVal
+                        });
+                    }
+                }
+            } else {
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    if (!row || row.length < 6) continue;
+                    const name = String(row[2] || '').trim();
+                    if (!name || name.length === 0) continue;
+                    const orderVal = parseFloat(row[3]);
+                    const delVal = parseFloat(row[5]);
+                    if (!isNaN(orderVal) && !isNaN(delVal)) {
+                        if (name.toLowerCase().includes('plant')) continue;
+                        plants.push({
+                            name: name,
+                            order: orderVal,
+                            delivered: delVal,
+                            remain: orderVal - delVal
+                        });
+                    }
+                }
+            }
+
+            if (detectedRegion) {
+                regionName = detectedRegion;
+            } else if (plants.length > 0) {
+                for (let i = headerRowIndex - 1; i >= 0; i--) {
+                    const row = data[i];
+                    if (!row) continue;
+                    const firstCell = String(row[0] || '').trim();
+                    if (firstCell && !firstCell.toLowerCase().includes('plant') && !isNumeric(firstCell)) {
+                        regionName = firstCell;
+                        break;
+                    }
+                }
+            }
+
+            return plants;
+        }
+
+        function updateFilterOptions(plants) {
+            const selectedValues = Array.from(plantFilter.selectedOptions).map(opt => opt.value);
+            
+            plantFilter.innerHTML = '';
+            const allOption = document.createElement('option');
+            allOption.value = '__all__';
+            allOption.textContent = 'Semua Plant';
+            plantFilter.appendChild(allOption);
+
+            const names = [...new Set(plants.map(p => p.name))].sort();
+            names.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                plantFilter.appendChild(opt);
+            });
+
+            if (selectedValues.length > 0) {
+                const options = plantFilter.options;
+                for (let i = 0; i < options.length; i++) {
+                    if (selectedValues.includes(options[i].value)) {
+                        options[i].selected = true;
+                    }
+                }
+            }
+            if (Array.from(plantFilter.selectedOptions).length === 0) {
+                plantFilter.querySelector('option[value="__all__"]').selected = true;
+            }
+        }
+
+        function applyFilter() {
+            const selected = Array.from(plantFilter.selectedOptions).map(opt => opt.value);
+            const isAll = selected.includes('__all__') || selected.length === 0;
+
+            if (isAll) {
+                filteredPlants = [...allPlants];
+                filterBadge.textContent = 'Menampilkan: semua';
+            } else {
+                filteredPlants = allPlants.filter(p => selected.includes(p.name));
+                filterBadge.textContent = `Menampilkan: ${filteredPlants.length} dari ${allPlants.length} plant`;
+            }
+
+            renderDashboard(filteredPlants);
+        }
+
+        function renderDashboard(plants) {
+            regionTitle.textContent = regionName;
+
+            if (!plants || plants.length === 0) {
+                tableContainer.innerHTML = `<div class="empty-state">📭 Tidak ada data plant ditemukan</div>`;
+                if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+                if (remainBarChartInstance) { remainBarChartInstance.destroy(); remainBarChartInstance = null; }
+                chartCaption.innerHTML = 'Tidak ada data untuk chart';
+                return;
+            }
+
+            const totalOrder = plants.reduce((s, p) => s + p.order, 0);
+            const totalDelivered = plants.reduce((s, p) => s + p.delivered, 0);
+            const totalRemain = plants.reduce((s, p) => s + p.remain, 0);
+
+            // Table
+            let html = `<div class="table-wrap"><table>
+                <thead><tr>
+                    <th>Plant Name</th>
+                    <th>Order (m³)</th>
+                    <th>Delivered (m³)</th>
+                    <th>Remain (m³)</th>
+                </tr></thead><tbody>`;
+            plants.forEach(p => {
+                const remainClass = p.remain > 0 ? 'remain-positive' : (p.remain < 0 ? 'remain-negative' : '');
+                html += `<tr>
+                    <td><strong>${p.name}</strong></td>
+                    <td>${p.order.toFixed(1)}</td>
+                    <td>${p.delivered.toFixed(1)}</td>
+                    <td class="remain-badge ${remainClass}">${p.remain.toFixed(1)}</td>
+                </tr>`;
+            });
+            html += `</tbody></table></div>`;
+            tableContainer.innerHTML = html;
+
+            const labels = plants.map(p => p.name);
+            const orderData = plants.map(p => p.order);
+            const deliveredData = plants.map(p => p.delivered);
+            const remainData = plants.map(p => p.remain);
+
+            // Chart: Order vs Delivered
+            const ctx1 = document.getElementById('plantChart').getContext('2d');
+            if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+            
+            chartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Order (m³)',
+                            data: orderData,
+                            backgroundColor: 'rgba(42, 125, 225, 0.75)',
+                            borderColor: '#1a5fa8',
+                            borderWidth: 1.5,
+                            borderRadius: 4,
+                        },
+                        {
+                            label: 'Delivered (m³)',
+                            data: deliveredData,
+                            backgroundColor: 'rgba(38, 185, 120, 0.75)',
+                            borderColor: '#1d8b63',
+                            borderWidth: 1.5,
+                            borderRadius: 4,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            labels: { boxWidth: 12, padding: 8, font: { size: 10 } }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            color: '#1a3a5a',
+                            font: { weight: 'bold', size: 12 },
+                            formatter: (value) => value.toFixed(1)
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: '#e2eaf3' },
+                            title: { display: true, text: 'Volume (m³)', color: '#4f6b86', font: { size: 9 } }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { 
+                                maxRotation: 0,
+                                minRotation: 0,
+                                font: { 
+                                    size: 11,
+                                    weight: '500'
+                                },
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // Bar Chart: Volume Remain - WARNA ORANGE
+            const ctxBar = document.getElementById('remainBarChart').getContext('2d');
+            if (remainBarChartInstance) { remainBarChartInstance.destroy(); remainBarChartInstance = null; }
+            
+            const barData = plants.filter(p => p.remain > 0);
+            const barLabels = barData.map(p => p.name);
+            const barValues = barData.map(p => p.remain);
+            
+            if (barData.length > 0) {
+                remainBarChartInstance = new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: barLabels,
+                        datasets: [{
+                            label: 'Volume Remain (m³)',
+                            data: barValues,
+                            backgroundColor: 'rgba(255, 140, 0, 0.8)',
+                            borderColor: '#CC7700',
+                            borderWidth: 1.5,
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'end',
+                                color: '#1a3a5a',
+                                font: { weight: 'bold', size: 12 },
+                                offset: 4,
+                                formatter: (value) => value.toFixed(1) + ' m³'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: '#e2eaf3' },
+                                title: { display: true, text: 'Volume (m³)', color: '#4f6b86', font: { size: 9 } }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { 
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    font: { 
+                                        size: 11,
+                                        weight: '500'
+                                    },
+                                    color: '#000000'
+                                }
+                            }
+                        },
+                        layout: {
+                            padding: {
+                                top: 25
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            } else {
+                remainBarChartInstance = new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Tidak ada Remain'],
+                        datasets: [{
+                            data: [0],
+                            backgroundColor: ['#e0e0e0'],
+                            borderColor: ['#cccccc'],
+                            borderWidth: 1.5,
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            datalabels: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: '#e2eaf3' } },
+                            x: { 
+                                grid: { display: false },
+                                ticks: { 
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    font: { 
+                                        size: 11,
+                                        weight: '500'
+                                    },
+                                    color: '#000000'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+
+            chartCaption.innerHTML = `
+                <span class="caption-plant">${plants.length} plant</span>
+                <span class="caption-separator">||</span>
+                <span class="caption-order">Total Order: ${totalOrder.toFixed(1)} m³</span>
+                <span class="caption-separator">||</span>
+                <span class="caption-delivered">Total Delivered: ${totalDelivered.toFixed(1)} m³</span>
+                <span class="caption-separator">||</span>
+                <span class="caption-remain">Volume Remain: ${totalRemain.toFixed(1)} m³</span>
+            `;
+        }
+
+        // ---------- DOWNLOAD IMAGE ----------
+        function downloadImage() {
+            // Sembunyikan tombol download sementara
+            downloadBtn.style.display = 'none';
+            
+            // Sembunyikan filter area
+            const filterArea = document.getElementById('filterArea');
+            filterArea.style.display = 'none';
+            
+            // Capture area yang diinginkan (captureArea dan captureArea2)
+            const element = document.getElementById('dashboardContent');
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                allowTaint: true,
+            }).then(canvas => {
+                // Tampilkan kembali tombol dan filter
+                downloadBtn.style.display = 'inline-flex';
+                filterArea.style.display = 'flex';
+                
+                const link = document.createElement('a');
+                link.download = `Plant_Dashboard_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Error downloading image:', err);
+                downloadBtn.style.display = 'inline-flex';
+                filterArea.style.display = 'flex';
+                alert('Gagal mendownload image. Silahkan coba lagi.');
+            });
+        }
+
+        // ---------- handle file ----------
+        function handleFile(file) {
+            if (!file) return;
+            fileStatus.textContent = file.name.substring(0, 15) + (file.name.length > 15 ? '...' : '');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: false });
+                    allPlants = parseExcelToPlants(workbook);
+                    updateFilterOptions(allPlants);
+                    applyFilter();
+                } catch (err) {
+                    console.error(err);
+                    tableContainer.innerHTML = `<div class="empty-state">❌ Gagal memproses file: ${err.message}</div>`;
+                    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+                    if (remainBarChartInstance) { remainBarChartInstance.destroy(); remainBarChartInstance = null; }
+                    chartCaption.innerHTML = 'Error parsing file';
+                }
+            };
+            reader.onerror = function() {
+                alert('Gagal membaca file.');
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Event listeners
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                handleFile(this.files[0]);
+            } else {
+                fileStatus.textContent = 'File';
+            }
+        });
+
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.3)';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.1)';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                fileInput.files = dt.files;
+                handleFile(file);
+            }
+        });
+
+        applyFilterBtn.addEventListener('click', applyFilter);
+        resetFilterBtn.addEventListener('click', function() {
+            const options = plantFilter.options;
+            for (let i = 0; i < options.length; i++) {
+                options[i].selected = true;
+            }
+            applyFilter();
+        });
+
+        // Download button
+        downloadBtn.addEventListener('click', downloadImage);
+
+        window.addEventListener('load', function() {});
+    })();
+</script>
+</body>
+</html>
