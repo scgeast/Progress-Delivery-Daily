@@ -321,12 +321,32 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+        table thead th:hover {
+            background: #2D3748;
         }
         table thead th:first-child {
             border-radius: 4px 0 0 0;
         }
         table thead th:last-child {
             border-radius: 0 4px 0 0;
+        }
+        table thead th .sort-icon {
+            margin-left: 4px;
+            font-size: 8px;
+            opacity: 0.5;
+        }
+        table thead th .sort-icon.active {
+            opacity: 1;
+        }
+        table thead th .sort-icon.asc::after {
+            content: '▲';
+        }
+        table thead th .sort-icon.desc::after {
+            content: '▼';
         }
         table tbody td {
             padding: 4px 8px;
@@ -673,6 +693,17 @@
             position: relative;
         }
 
+        /* Sorting info badge */
+        .sort-info {
+            font-size: 9px;
+            color: #6B7280;
+            font-weight: 400;
+            margin-left: 8px;
+            background: #F3F4F6;
+            padding: 1px 8px;
+            border-radius: 10px;
+        }
+
         @media (max-width: 1024px) {
             .kpi-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -964,6 +995,7 @@
                         <div class="card-header">
                             <i class="fa fa-line-chart"></i> TOP PLANT ACHIEVEMENT
                             <span style="font-weight:400;font-size:10px;color:#6B7280;margin-left:4px;" id="achFilterLabel">(All Regions)</span>
+                            <span class="sort-info" id="achSortInfo">Sorted by: Achievement ▼</span>
                         </div>
                         <div class="card-body">
                             <div class="achievement-chart-wrapper">
@@ -994,11 +1026,11 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>PLANT</th>
-                                                <th class="text-right">ORDER (m³)</th>
-                                                <th class="text-right">DELIVERED (m³)</th>
-                                                <th class="text-right">REMAINING (m³)</th>
-                                                <th class="text-right">ACHIEVEMENT</th>
+                                                <th data-sort="name">PLANT <span class="sort-icon"></span></th>
+                                                <th data-sort="order" class="text-right">ORDER (m³) <span class="sort-icon"></span></th>
+                                                <th data-sort="delivered" class="text-right">DELIVERED (m³) <span class="sort-icon"></span></th>
+                                                <th data-sort="remaining" class="text-right">REMAINING (m³) <span class="sort-icon"></span></th>
+                                                <th data-sort="achievement" class="text-right">ACHIEVEMENT <span class="sort-icon active desc"></span></th>
                                             </tr>
                                         </thead>
                                         <tbody id="plantTableBody"></tbody>
@@ -1088,6 +1120,16 @@
         const remainChartCard = document.getElementById('remainChartCard');
         let allData = { regions: {}, plants: [], reportDate: null };
         let contribChart, plantChart, remainChart;
+        let currentSort = { column: 'achievement', direction: 'desc' };
+
+        // Column name mapping for display
+        const columnNames = {
+            'name': 'Plant Name',
+            'order': 'Order',
+            'delivered': 'Delivered',
+            'remaining': 'Remaining',
+            'achievement': 'Achievement'
+        };
 
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -1101,34 +1143,61 @@
             const dashboard = document.querySelector('.dashboard');
             const originalOverflow = dashboard.style.overflow;
             const originalHeight = dashboard.style.height;
+            
+            // Siapkan untuk capture dengan kualitas tinggi
             dashboard.style.overflow = 'visible';
             dashboard.style.height = 'auto';
+            
             const isRegionView = !regionView.classList.contains('hidden');
             const activeView = isRegionView ? regionView : plantView;
             const scrollX = window.scrollX;
             const scrollY = window.scrollY;
+            
+            // Resize charts sebelum capture
+            if (contribChart) contribChart.resize();
+            if (plantChart) plantChart.resize();
+            if (remainChart) remainChart.resize();
+            
+            // Gunakan html2canvas dengan pengaturan kualitas tinggi
             html2canvas(activeView, {
-                scale: 2,
+                scale: 3, // Scale lebih tinggi untuk kualitas lebih baik
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#f0f2f5',
                 allowTaint: true,
-                onclone: function(doc) {
-                    if (contribChart) contribChart.resize();
-                    if (plantChart) plantChart.resize();
-                    if (remainChart) remainChart.resize();
+                width: activeView.scrollWidth,
+                height: activeView.scrollHeight,
+                windowWidth: activeView.scrollWidth,
+                windowHeight: activeView.scrollHeight,
+                pixelRatio: 3, // Pixel ratio tinggi untuk sharpness
+                imageTimeout: 0,
+                removeContainer: true,
+                onclone: function(clonedDoc) {
+                    // Pastikan chart dirender dengan baik di clone
+                    const canvases = clonedDoc.querySelectorAll('canvas');
+                    canvases.forEach(c => {
+                        const ctx = c.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                    });
                 }
             }).then(canvas => {
+                // Kembalikan style dashboard
                 dashboard.style.overflow = originalOverflow;
                 dashboard.style.height = originalHeight;
                 window.scrollTo(scrollX, scrollY);
+                
+                // Buat image dengan kualitas tinggi
                 const link = document.createElement('a');
                 const tabName = isRegionView ? 'Region' : 'Plant';
                 const dateStr = allData.reportDate ? allData.reportDate.replace(/\s/g, '_') : 'report';
                 link.download = `SCG_Performance_${tabName}_${dateStr}.png`;
-                link.href = canvas.toDataURL('image/png');
+                
+                // Konversi ke PNG dengan kualitas tinggi
+                link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             }).catch(error => {
+                console.error('Download error:', error);
                 dashboard.style.overflow = originalOverflow;
                 dashboard.style.height = originalHeight;
                 window.scrollTo(scrollX, scrollY);
@@ -1159,8 +1228,199 @@
             }, 100);
         });
 
-        regionFilter.addEventListener('change', renderPlantData);
+        regionFilter.addEventListener('change', () => {
+            currentSort = { column: 'achievement', direction: 'desc' };
+            renderPlantData();
+        });
         excelInput.addEventListener('change', handleFile);
+
+        // Add sorting event listeners to table headers
+        document.addEventListener('click', function(e) {
+            const th = e.target.closest('th[data-sort]');
+            if (th) {
+                const sortKey = th.dataset.sort;
+                const table = th.closest('table');
+                
+                // Toggle direction
+                if (currentSort.column === sortKey) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = sortKey;
+                    currentSort.direction = 'asc';
+                }
+                
+                // Update sort icons
+                const allHeaders = table.querySelectorAll('th[data-sort]');
+                allHeaders.forEach(h => {
+                    const icon = h.querySelector('.sort-icon');
+                    icon.className = 'sort-icon';
+                    if (h.dataset.sort === currentSort.column) {
+                        icon.classList.add('active', currentSort.direction);
+                    }
+                });
+                
+                // Re-render everything with new sort
+                renderPlantData();
+            }
+        });
+
+        function getCurrentPlants() {
+            const selected = regionFilter.value;
+            return selected === 'all' ? [...allData.plants] : allData.plants.filter(p => p.region === selected);
+        }
+
+        function sortPlants(plants, column, direction) {
+            const sorted = [...plants];
+            const multiplier = direction === 'asc' ? 1 : -1;
+            
+            sorted.sort((a, b) => {
+                let valA, valB;
+                switch(column) {
+                    case 'name':
+                        valA = a.name.toLowerCase();
+                        valB = b.name.toLowerCase();
+                        return valA.localeCompare(valB) * multiplier;
+                    case 'order':
+                        valA = a.order;
+                        valB = b.order;
+                        break;
+                    case 'delivered':
+                        valA = a.delivered;
+                        valB = b.delivered;
+                        break;
+                    case 'remaining':
+                        valA = a.remaining;
+                        valB = b.remaining;
+                        break;
+                    case 'achievement':
+                        valA = a.order > 0 ? a.delivered / a.order : 0;
+                        valB = b.order > 0 ? b.delivered / b.order : 0;
+                        break;
+                    default:
+                        return 0;
+                }
+                return (valA - valB) * multiplier;
+            });
+            return sorted;
+        }
+
+        function renderPlantTable(plants) {
+            const tbody = document.getElementById('plantTableBody');
+            tbody.innerHTML = '';
+            
+            let totalOrder = 0,
+                totalDelivered = 0;
+            plants.forEach(p => { totalOrder += p.order;
+                totalDelivered += p.delivered; });
+            const totalRemain = totalOrder - totalDelivered;
+            const totalAch = totalOrder > 0 ? (totalDelivered / totalOrder * 100).toFixed(1) : '0.0';
+
+            plants.forEach(p => {
+                const ach = p.order > 0 ? (p.delivered / p.order * 100).toFixed(1) : '0.0';
+                const volumeClass = getVolumeClass(p.order);
+                const styleAttr = volumeClass !== null ?
+                    `style="background-color:${getVolumeColor(p.order)};border-left:3px solid ${getVolumeBorderColor(p.order)}"` :
+                    '';
+
+                tbody.innerHTML += `
+                        <tr class="${volumeClass || ''}" ${styleAttr}>
+                            <td>${p.name}</td>
+                            <td class="text-right">${formatNumberDec(p.order)}</td>
+                            <td class="text-right">${formatNumberDec(p.delivered)}</td>
+                            <td class="text-right">${formatNumberDec(p.remaining)}</td>
+                            <td class="text-right">${formatAchievement(ach)}</td>
+                        </tr>`;
+            });
+
+            document.getElementById('plantTotalRow').innerHTML = `
+                    <tr>
+                        <td>TOTAL</td>
+                        <td class="text-right">${formatNumberDec(totalOrder)}</td>
+                        <td class="text-right">${formatNumberDec(totalDelivered)}</td>
+                        <td class="text-right">${formatNumberDec(totalRemain)}</td>
+                        <td class="text-right" style="color:#E21B23;font-weight:700">${totalAch}%</td>
+                    </tr>`;
+        }
+
+        function updateAchievementChart(plants) {
+            // Get top 10 plants based on current sort
+            const topPlants = plants.slice(0, 10);
+            const achLabels = topPlants.map(p => p.name.length > 16 ? p.name.substring(0, 14) + '…' : p.name);
+            const achValues = topPlants.map(p => p.order > 0 ? (p.delivered / p.order * 100).toFixed(1) : 0);
+            const achColors = achValues.map(v => getAchColor(parseFloat(v)));
+
+            if (plantChart) {
+                plantChart.destroy();
+                plantChart = null;
+            }
+            
+            const ctx = document.getElementById('plantChart').getContext('2d');
+            // Set high quality rendering
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            plantChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: achLabels,
+                    datasets: [{
+                        data: achValues,
+                        backgroundColor: achColors,
+                        borderRadius: 3,
+                        barThickness: 32,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    devicePixelRatio: 3, // High DPI rendering
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 30,
+                            top: 10,
+                            bottom: 10
+                        }
+                    },
+                    scales: {
+                        x: {
+                            max: 100,
+                            grid: { color: '#ECECEC' },
+                            ticks: { font: { size: 9 } },
+                            afterFit: function(axis) {
+                                axis.max += 5;
+                            }
+                        },
+                        y: {
+                            grid: { color: '#ECECEC' },
+                            ticks: {
+                                font: { size: 10, weight: '600' },
+                                autoSkip: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'right',
+                            color: '#000',
+                            font: { weight: '700', size: 11 },
+                            formatter: v => v + '%',
+                            offset: 2
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // Update sort info on achievement chart header
+            const sortInfo = document.getElementById('achSortInfo');
+            const directionSymbol = currentSort.direction === 'asc' ? '▲' : '▼';
+            const columnName = columnNames[currentSort.column] || currentSort.column;
+            sortInfo.textContent = `Sorted by: ${columnName} ${directionSymbol}`;
+        }
 
         function handleFile(e) {
             const file = e.target.files[0];
@@ -1172,6 +1432,15 @@
                 const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: 0, raw: false });
                 parseData(rows, sheet);
                 renderRegionData();
+                currentSort = { column: 'achievement', direction: 'desc' };
+                const headers = document.querySelectorAll('th[data-sort]');
+                headers.forEach(h => {
+                    const icon = h.querySelector('.sort-icon');
+                    icon.className = 'sort-icon';
+                    if (h.dataset.sort === 'achievement') {
+                        icon.classList.add('active', 'desc');
+                    }
+                });
                 renderPlantData();
                 setTimeout(() => {
                     if (contribChart) contribChart.resize();
@@ -1317,7 +1586,7 @@
             document.getElementById('findPctDelivered').textContent = pctDel + '%';
             const regList = Object.keys(allData.regions);
             const contribPct = regList.map(r => totalOrder > 0 ? (allData.regions[r].order / totalOrder * 100).toFixed(0) :
-            '0');
+                '0');
 
             let maxRegion = regList[0];
             let maxVolume = 0;
@@ -1337,8 +1606,16 @@
             document.getElementById('findBestRegion').textContent = bestRegion;
             document.getElementById('findBestPct').textContent = bestPct.toFixed(1) + '%';
 
-            if (contribChart) contribChart.destroy();
-            contribChart = new Chart(document.getElementById('contribChart'), {
+            if (contribChart) {
+                contribChart.destroy();
+                contribChart = null;
+            }
+            
+            const ctx = document.getElementById('contribChart').getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            contribChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: regList,
@@ -1354,6 +1631,7 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
+                    devicePixelRatio: 3,
                     scales: {
                         x: {
                             max: 40,
@@ -1454,9 +1732,9 @@
 
         function renderPlantData() {
             const selected = regionFilter.value;
-            let plants = selected === 'all' ? [...allData.plants] : allData.plants.filter(p => p.region === selected);
-
-            plants.sort((a, b) => (b.delivered / (b.order || 1)) - (a.delivered / (a.order || 1)));
+            let plants = getCurrentPlants();
+            
+            plants = sortPlants(plants, currentSort.column, currentSort.direction);
 
             let totalOrder = 0,
                 totalDelivered = 0;
@@ -1474,82 +1752,19 @@
             document.getElementById('plantPctRemain').textContent = pctRem + '% dari Total Order';
             document.getElementById('plantAchievement').textContent = totalAch + '%';
 
-            // update filter labels
             const filterText = selected === 'all' ? '(All Regions)' : '(' + selected + ')';
             document.getElementById('achFilterLabel').textContent = filterText;
             document.getElementById('remainFilterLabel').textContent = filterText;
             document.getElementById('tableFilterLabel').textContent = filterText;
 
-            // Show/hide remain chart based on filter
             if (selected === 'all') {
                 remainChartCard.classList.add('hidden');
             } else {
                 remainChartCard.classList.remove('hidden');
             }
 
-            // TOP PLANT ACHIEVEMENT CHART - same size as region chart
-            const topPlants = plants.slice(0, 10);
-            const achLabels = topPlants.map(p => p.name.length > 16 ? p.name.substring(0, 14) + '…' : p.name);
-            const achValues = topPlants.map(p => p.order > 0 ? (p.delivered / p.order * 100).toFixed(1) : 0);
-            const achColors = achValues.map(v => getAchColor(parseFloat(v)));
+            updateAchievementChart(plants);
 
-            if (plantChart) plantChart.destroy();
-            plantChart = new Chart(document.getElementById('plantChart'), {
-                type: 'bar',
-                data: {
-                    labels: achLabels,
-                    datasets: [{
-                        data: achValues,
-                        backgroundColor: achColors,
-                        borderRadius: 3,
-                        barThickness: 32,
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 30,
-                            top: 10,
-                            bottom: 10
-                        }
-                    },
-                    scales: {
-                        x: {
-                            max: 100,
-                            grid: { color: '#ECECEC' },
-                            ticks: { font: { size: 9 } },
-                            afterFit: function(axis) {
-                                axis.max += 5;
-                            }
-                        },
-                        y: {
-                            grid: { color: '#ECECEC' },
-                            ticks: {
-                                font: { size: 10, weight: '600' },
-                                autoSkip: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            anchor: 'end',
-                            align: 'right',
-                            color: '#000',
-                            font: { weight: '700', size: 11 },
-                            formatter: v => v + '%',
-                            offset: 2
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
-
-            // REMAIN VOLUME CHART - VERTICAL with horizontal labels, black color, larger font
             const remainPlants = [...plants].filter(p => p.remaining > 0).sort((a, b) => b.remaining - a.remaining);
             const topRemainPlants = remainPlants.slice(0, 15);
             const remainLabels = topRemainPlants.map(p => p.name.length > 25 ? p.name.substring(0, 23) + '…' : p.name);
@@ -1561,8 +1776,15 @@
                 return '#0066CC';
             });
 
-            if (remainChart) remainChart.destroy();
+            if (remainChart) {
+                remainChart.destroy();
+                remainChart = null;
+            }
+            
             const ctxRemain = document.getElementById('remainChart').getContext('2d');
+            ctxRemain.imageSmoothingEnabled = true;
+            ctxRemain.imageSmoothingQuality = 'high';
+            
             remainChart = new Chart(ctxRemain, {
                 type: 'bar',
                 data: {
@@ -1578,6 +1800,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    devicePixelRatio: 3,
                     layout: {
                         padding: {
                             left: 10,
@@ -1623,36 +1846,8 @@
                 plugins: [ChartDataLabels]
             });
 
-            // PLANT TABLE
-            const tbody = document.getElementById('plantTableBody');
-            tbody.innerHTML = '';
-            plants.forEach(p => {
-                const ach = p.order > 0 ? (p.delivered / p.order * 100).toFixed(1) : '0.0';
-                const volumeClass = getVolumeClass(p.order);
-                const styleAttr = volumeClass !== null ?
-                    `style="background-color:${getVolumeColor(p.order)};border-left:3px solid ${getVolumeBorderColor(p.order)}"` :
-                    '';
+            renderPlantTable(plants);
 
-                tbody.innerHTML += `
-                        <tr class="${volumeClass || ''}" ${styleAttr}>
-                            <td>${p.name}</td>
-                            <td class="text-right">${formatNumberDec(p.order)}</td>
-                            <td class="text-right">${formatNumberDec(p.delivered)}</td>
-                            <td class="text-right">${formatNumberDec(p.remaining)}</td>
-                            <td class="text-right">${formatAchievement(ach)}</td>
-                        </tr>`;
-            });
-
-            document.getElementById('plantTotalRow').innerHTML = `
-                    <tr>
-                        <td>TOTAL</td>
-                        <td class="text-right">${formatNumberDec(totalOrder)}</td>
-                        <td class="text-right">${formatNumberDec(totalDelivered)}</td>
-                        <td class="text-right">${formatNumberDec(totalRemain)}</td>
-                        <td class="text-right" style="color:#E21B23;font-weight:700">${totalAch}%</td>
-                    </tr>`;
-
-            // COMPACT BEST & FINDINGS
             const bestOrd = plants.filter(p => p.order > 0).sort((a, b) => b.order - a.order)[0] || null;
             const bestDel = plants.filter(p => p.delivered > 0).sort((a, b) => b.delivered - a.delivered)[0] || null;
 
@@ -1694,11 +1889,20 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('reportDate').textContent = '-';
+            currentSort = { column: 'achievement', direction: 'desc' };
+            const headers = document.querySelectorAll('th[data-sort]');
+            headers.forEach(h => {
+                const icon = h.querySelector('.sort-icon');
+                icon.className = 'sort-icon';
+                if (h.dataset.sort === 'achievement') {
+                    icon.classList.add('active', 'desc');
+                }
+            });
         });
         window.addEventListener('resize', () => {
-            if (contribChart) contribChart.resize();
-            if (plantChart) plantChart.resize();
-            if (remainChart) remainChart.resize();
+            if (contribChart) contribChart?.resize();
+            if (plantChart) plantChart?.resize();
+            if (remainChart) remainChart?.resize();
         });
     </script>
 </body>
