@@ -37,6 +37,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: all 0.4s ease;
         }
         .header {
             display: flex;
@@ -46,7 +47,7 @@
             padding-bottom: 8px;
             margin-bottom: 10px;
             flex-shrink: 0;
-            position: relative;
+            transition: border-color 0.4s ease;
         }
         .header-left h1 {
             font-size: 22px;
@@ -55,11 +56,13 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
             line-height: 1.2;
+            transition: color 0.4s ease;
         }
         .header-left .sub {
             color: #6B7280;
             font-size: 12px;
             font-weight: 500;
+            transition: color 0.4s ease;
         }
         .header-right {
             display: flex;
@@ -68,6 +71,7 @@
             font-size: 12px;
             color: #6B7280;
             padding-bottom: 2px;
+            transition: color 0.4s ease;
         }
         .header-right .date-badge i {
             margin-right: 4px;
@@ -92,6 +96,7 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 12px;
+            transition: background 0.4s ease;
         }
         .upload-area input[type="file"]::file-selector-button:hover {
             background: #b8161e;
@@ -104,6 +109,7 @@
             background: white;
             outline: none;
             min-width: 140px;
+            transition: all 0.4s ease;
         }
         .upload-area select:focus {
             border-color: #E21B23;
@@ -112,6 +118,7 @@
             font-size: 12px;
             font-weight: 600;
             color: #374151;
+            transition: color 0.4s ease;
         }
         #filterArea {
             display: flex;
@@ -120,6 +127,12 @@
         }
         #filterArea.hidden {
             display: none !important;
+        }
+        .download-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
         }
         .download-btn {
             background: #E21B23;
@@ -142,18 +155,83 @@
         .download-btn i {
             font-size: 14px;
         }
-        .download-area {
+        
+        .theme-toggle-area {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-left: auto;
+            gap: 6px;
         }
+        .theme-btn {
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+        .theme-btn:hover {
+            transform: scale(1.15);
+        }
+        .theme-btn.active {
+            border-color: #1F2937;
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(0,0,0,0.3);
+        }
+        .theme-btn[data-theme="default"] {
+            background: linear-gradient(135deg, #E21B23, #f0f2f5);
+        }
+        .theme-btn[data-theme="green-neon"] {
+            background: linear-gradient(135deg, #00FF41, #003300);
+        }
+        .theme-btn[data-theme="neon-red"] {
+            background: linear-gradient(135deg, #FF0040, #1a0000);
+        }
+        .theme-btn[data-theme="neon-blue"] {
+            background: linear-gradient(135deg, #00D4FF, #000033);
+        }
+        .theme-btn[data-theme="neon-yellow"] {
+            background: linear-gradient(135deg, #FFDD00, #1a1a00);
+        }
+        .theme-btn .tooltip {
+            visibility: hidden;
+            width: 80px;
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 4px 6px;
+            position: absolute;
+            z-index: 100;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .theme-btn:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .theme-divider {
+            width: 1px;
+            height: 28px;
+            background: #d1d5db;
+            margin: 0 4px;
+            transition: background 0.4s ease;
+        }
+
         .tabs {
             display: flex;
             gap: 0;
             margin-bottom: 8px;
             border-bottom: 2px solid #e5e7eb;
             flex-shrink: 0;
+            transition: border-color 0.4s ease;
         }
         .tab-btn {
             padding: 6px 20px;
@@ -204,12 +282,14 @@
             border-radius: 6px;
             padding: 8px 10px;
             text-align: center;
+            transition: all 0.4s ease;
         }
         .kpi-card .icon {
             font-size: 16px;
             color: #E21B23;
             display: block;
             margin-bottom: 1px;
+            transition: color 0.4s ease;
         }
         .kpi-card .label {
             font-size: 9px;
@@ -217,29 +297,25 @@
             text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.3px;
+            transition: color 0.4s ease;
         }
         .kpi-card .value {
             font-size: 18px;
             font-weight: 800;
             color: #1F2937;
             line-height: 1.2;
+            transition: color 0.4s ease;
         }
         .kpi-card .sub {
             font-size: 9px;
             color: #9CA3AF;
+            transition: color 0.4s ease;
         }
-        .kpi-card .value.red {
-            color: #E21B23;
-        }
-        .kpi-card .value.green {
-            color: #009E5F;
-        }
-        .kpi-card .value.blue {
-            color: #0066CC;
-        }
-        .kpi-card .value.orange {
-            color: #F77F00;
-        }
+        .kpi-card .value.red { color: #E21B23; }
+        .kpi-card .value.green { color: #009E5F; }
+        .kpi-card .value.blue { color: #0066CC; }
+        .kpi-card .value.orange { color: #F77F00; }
+
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -255,6 +331,7 @@
             flex-direction: column;
             overflow: hidden;
             min-height: 0;
+            transition: all 0.4s ease;
         }
         .card-header {
             padding: 6px 12px;
@@ -267,10 +344,12 @@
             align-items: center;
             gap: 6px;
             flex-shrink: 0;
+            transition: all 0.4s ease;
         }
         .card-header i {
             color: #E21B23;
             font-size: 13px;
+            transition: color 0.4s ease;
         }
         .card-body {
             padding: 6px 10px;
@@ -303,6 +382,7 @@
         .scrollable-table::-webkit-scrollbar-thumb {
             background: #D1D5DB;
             border-radius: 3px;
+            transition: background 0.4s ease;
         }
         table {
             width: 100%;
@@ -323,7 +403,7 @@
             z-index: 10;
             cursor: pointer;
             user-select: none;
-            transition: background 0.2s ease;
+            transition: all 0.4s ease;
         }
         table thead th:hover {
             background: #2D3748;
@@ -352,6 +432,7 @@
             padding: 4px 8px;
             border-bottom: 1px solid #f1f5f9;
             font-size: 11px;
+            transition: border-color 0.4s ease, color 0.4s ease;
         }
         table tbody tr:hover {
             background: #F8FAFC;
@@ -365,6 +446,7 @@
             position: sticky;
             bottom: 0;
             z-index: 10;
+            transition: all 0.4s ease;
         }
         .text-right {
             text-align: right;
@@ -386,48 +468,14 @@
             background: #E5E7EB;
             overflow: hidden;
             display: inline-block;
+            transition: background 0.4s ease;
         }
         .ach-bar .fill {
             height: 100%;
             border-radius: 3px;
             transition: width 0.6s ease;
         }
-        tr.volume-low-0 td:first-child {
-            border-left: 3px solid #B71C1C !important;
-        }
-        tr.volume-low-0 {
-            background-color: #FFEBEE !important;
-        }
-        tr.volume-low-1 td:first-child {
-            border-left: 3px solid #C62828 !important;
-        }
-        tr.volume-low-1 {
-            background-color: #FFEBEE !important;
-        }
-        tr.volume-low-2 td:first-child {
-            border-left: 3px solid #D32F2F !important;
-        }
-        tr.volume-low-2 {
-            background-color: #FFEBEE !important;
-        }
-        tr.volume-low-3 td:first-child {
-            border-left: 3px solid #E53935 !important;
-        }
-        tr.volume-low-3 {
-            background-color: #FFEBEE !important;
-        }
-        tr.volume-low-4 td:first-child {
-            border-left: 3px solid #EF5350 !important;
-        }
-        tr.volume-low-4 {
-            background-color: #FFF3F0 !important;
-        }
-        tr.volume-low-5 td:first-child {
-            border-left: 3px solid #EF9A9A !important;
-        }
-        tr.volume-low-5 {
-            background-color: #FCE4EC !important;
-        }
+        
         #regionKPIPlants {
             display: flex;
             gap: 10px;
@@ -442,6 +490,7 @@
             text-align: center;
             min-width: 200px;
             flex-grow: 1;
+            transition: all 0.4s ease;
         }
         .kpi-plant-block .label {
             font-size: 9px;
@@ -450,12 +499,14 @@
             font-weight: 600;
             letter-spacing: 0.3px;
             margin-bottom: 2px;
+            transition: color 0.4s ease;
         }
         .kpi-plant-block .value {
             font-size: 14px;
             font-weight: 800;
             color: #1F2937;
             line-height: 1.2;
+            transition: color 0.4s ease;
         }
         .kpi-plant-block .details {
             font-size: 10px;
@@ -465,6 +516,7 @@
             overflow-y: auto;
             text-align: left;
             padding: 2px 4px;
+            transition: color 0.4s ease;
         }
         .kpi-plant-block .details .plant-name {
             display: inline-block;
@@ -474,9 +526,7 @@
             margin: 1px 2px;
             font-size: 9px;
             white-space: nowrap;
-        }
-        .kpi-plant-block .details .plant-name:hover {
-            background: #e5e7eb;
+            transition: background 0.4s ease;
         }
         [data-tooltip]:hover {
             position: relative;
@@ -499,26 +549,6 @@
             white-space: normal;
             word-wrap: break-word;
         }
-        .progress-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .progress-bar {
-            width: 40px;
-            height: 5px;
-            border-radius: 3px;
-            background: #E5E7EB;
-            overflow: hidden;
-            display: inline-block;
-        }
-        .progress-bar .fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.6s ease;
-        }
-
-        /* Compact Best & Findings - single row */
         .compact-best-findings {
             background: #F0FDF4;
             border: 1px solid #BBF7D0;
@@ -531,6 +561,7 @@
             flex-shrink: 0;
             margin-top: 6px;
             min-height: 44px;
+            transition: all 0.4s ease;
         }
         .compact-best-findings .item {
             display: flex;
@@ -539,6 +570,7 @@
             font-size: 10px;
             color: #1F2937;
             white-space: nowrap;
+            transition: color 0.4s ease;
         }
         .compact-best-findings .item .label {
             font-size: 8px;
@@ -546,28 +578,31 @@
             text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.2px;
+            transition: color 0.4s ease;
         }
         .compact-best-findings .item .value {
             font-weight: 700;
             font-size: 11px;
+            transition: color 0.4s ease;
         }
         .compact-best-findings .item .name {
             font-weight: 500;
             font-size: 10px;
             color: #4B5563;
+            transition: color 0.4s ease;
         }
         .compact-best-findings .divider {
             width: 1px;
             height: 24px;
             background: #BBF7D0;
             flex-shrink: 0;
+            transition: background 0.4s ease;
         }
         .compact-best-findings .icon {
             font-size: 12px;
             flex-shrink: 0;
         }
 
-        /* Plant view layout: achievement chart left (same width as region chart), table + remain chart right */
         .plant-two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -597,8 +632,6 @@
             min-height: 0;
             height: 100%;
         }
-
-        /* remain chart card */
         .remain-chart-card .card-header {
             padding: 4px 12px;
         }
@@ -614,20 +647,10 @@
             min-height: 0;
             position: relative;
         }
-        .remain-chart-card .chart-legend {
-            font-size: 8px;
-        }
-        .remain-chart-card .chart-legend .dot {
-            width: 8px;
-            height: 8px;
-        }
-
-        /* hide remain chart when all regions selected */
         #remainChartCard.hidden {
             display: none !important;
         }
 
-        /* Region findings with icons */
         .region-findings {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -636,6 +659,7 @@
             font-size: 11px;
             color: #1F2937;
             flex-shrink: 0;
+            transition: color 0.4s ease;
         }
         .region-findings .item {
             display: flex;
@@ -652,12 +676,6 @@
         .region-findings .item .text strong {
             font-weight: 700;
         }
-        .region-findings .item .text .gray {
-            color: #6B7280;
-            font-weight: 400;
-        }
-
-        /* Chart legend style */
         .chart-legend {
             display: flex;
             justify-content: center;
@@ -667,6 +685,7 @@
             flex-shrink: 0;
             padding: 2px 0 0 0;
             flex-wrap: wrap;
+            transition: color 0.4s ease;
         }
         .chart-legend span {
             display: inline-flex;
@@ -679,8 +698,6 @@
             border-radius: 50%;
             display: inline-block;
         }
-
-        /* Achievement chart - same as region chart */
         .achievement-chart-wrapper {
             flex: 1;
             min-height: 0;
@@ -692,8 +709,6 @@
             min-height: 0;
             position: relative;
         }
-
-        /* Sorting info badge */
         .sort-info {
             font-size: 9px;
             color: #6B7280;
@@ -702,115 +717,678 @@
             background: #F3F4F6;
             padding: 1px 8px;
             border-radius: 10px;
+            transition: all 0.4s ease;
+        }
+
+        /* ===== THEME STYLES ===== */
+        /* GREEN NEON */
+        .theme-green-neon {
+            background: #0a0f0a !important;
+        }
+        .theme-green-neon .header {
+            border-bottom-color: #00FF41 !important;
+        }
+        .theme-green-neon .header-left h1 {
+            color: #00FF41 !important;
+            text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+        .theme-green-neon .header-left .sub {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .header-right {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .kpi-card {
+            background: rgba(0, 255, 65, 0.08) !important;
+            border-color: rgba(0, 255, 65, 0.3) !important;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.05);
+        }
+        .theme-green-neon .kpi-card .icon {
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .kpi-card .label {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .kpi-card .value {
+            color: #00FF41 !important;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        .theme-green-neon .kpi-card .value.red { color: #00FF41 !important; }
+        .theme-green-neon .kpi-card .value.green { color: #00FF41 !important; }
+        .theme-green-neon .kpi-card .value.blue { color: #00CCDD !important; }
+        .theme-green-neon .kpi-card .value.orange { color: #FFDD00 !important; }
+        .theme-green-neon .kpi-card .sub { color: #66aa77 !important; }
+        .theme-green-neon .card {
+            background: rgba(0, 20, 0, 0.85) !important;
+            border-color: rgba(0, 255, 65, 0.3) !important;
+        }
+        .theme-green-neon .card-header {
+            background: rgba(0, 255, 65, 0.08) !important;
+            border-bottom-color: rgba(0, 255, 65, 0.3) !important;
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .card-header i {
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .kpi-plant-block {
+            background: rgba(0, 20, 0, 0.85) !important;
+            border-color: rgba(0, 255, 65, 0.3) !important;
+        }
+        .theme-green-neon .kpi-plant-block .label {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .kpi-plant-block .value {
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .kpi-plant-block .details {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .kpi-plant-block .details .plant-name {
+            background: rgba(0, 255, 65, 0.15) !important;
+            color: #00FF41 !important;
+        }
+        .theme-green-neon table thead th {
+            background: rgba(0, 255, 65, 0.2) !important;
+            color: #00FF41 !important;
+        }
+        .theme-green-neon table tbody td {
+            border-bottom-color: rgba(0, 255, 65, 0.1) !important;
+            color: #88ff99 !important;
+        }
+        .theme-green-neon table tbody tr:hover {
+            background: rgba(0, 255, 65, 0.05) !important;
+        }
+        .theme-green-neon table tfoot td {
+            background: rgba(0, 255, 65, 0.08) !important;
+            border-top-color: rgba(0, 255, 65, 0.3) !important;
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .compact-best-findings {
+            background: rgba(0, 255, 65, 0.08) !important;
+            border-color: rgba(0, 255, 65, 0.3) !important;
+        }
+        .theme-green-neon .compact-best-findings .item {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .compact-best-findings .item .label {
+            color: #66aa77 !important;
+        }
+        .theme-green-neon .compact-best-findings .item .value {
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .compact-best-findings .item .name {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .compact-best-findings .divider {
+            background: rgba(0, 255, 65, 0.3) !important;
+        }
+        .theme-green-neon .region-findings {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .tab-btn.active {
+            color: #00FF41 !important;
+            border-bottom-color: #00FF41 !important;
+        }
+        .theme-green-neon .tab-btn {
+            color: #66aa77 !important;
+        }
+        .theme-green-neon .tabs {
+            border-bottom-color: rgba(0, 255, 65, 0.3) !important;
+        }
+        .theme-green-neon .sort-info {
+            background: rgba(0, 255, 65, 0.1) !important;
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .upload-area .filter-label {
+            color: #88ff99 !important;
+        }
+        .theme-green-neon .upload-area select {
+            background: rgba(0, 20, 0, 0.85) !important;
+            border-color: rgba(0, 255, 65, 0.3) !important;
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .upload-area select option {
+            background: #0a1a0a !important;
+            color: #00FF41 !important;
+        }
+        .theme-green-neon .upload-area input[type="file"]::file-selector-button {
+            background: #00FF41 !important;
+            color: #0a0f0a !important;
+        }
+        .theme-green-neon .upload-area input[type="file"]::file-selector-button:hover {
+            background: #00DD33 !important;
+        }
+        .theme-green-neon .ach-bar {
+            background: rgba(0, 255, 65, 0.15) !important;
+        }
+        .theme-green-neon .chart-legend {
+            color: #66aa77 !important;
+        }
+        .theme-green-neon .scrollable-table::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 65, 0.3) !important;
+        }
+        .theme-green-neon .download-btn {
+            background: #00FF41 !important;
+            color: #0a0f0a !important;
+        }
+        .theme-green-neon .download-btn:hover {
+            background: #00DD33 !important;
+        }
+        .theme-green-neon .theme-divider {
+            background: rgba(0, 255, 65, 0.3) !important;
+        }
+
+        /* NEON RED */
+        .theme-neon-red {
+            background: #0a0000 !important;
+        }
+        .theme-neon-red .header {
+            border-bottom-color: #FF0040 !important;
+        }
+        .theme-neon-red .header-left h1 {
+            color: #FF0040 !important;
+            text-shadow: 0 0 20px rgba(255, 0, 64, 0.5);
+        }
+        .theme-neon-red .header-left .sub {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .header-right {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .kpi-card {
+            background: rgba(255, 0, 64, 0.08) !important;
+            border-color: rgba(255, 0, 64, 0.3) !important;
+            box-shadow: 0 0 20px rgba(255, 0, 64, 0.05);
+        }
+        .theme-neon-red .kpi-card .icon {
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .kpi-card .label {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .kpi-card .value {
+            color: #FF0040 !important;
+            text-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
+        }
+        .theme-neon-red .kpi-card .value.red { color: #FF0040 !important; }
+        .theme-neon-red .kpi-card .value.green { color: #FF0040 !important; }
+        .theme-neon-red .kpi-card .value.blue { color: #FF6688 !important; }
+        .theme-neon-red .kpi-card .value.orange { color: #FFAA00 !important; }
+        .theme-neon-red .kpi-card .sub { color: #883344 !important; }
+        .theme-neon-red .card {
+            background: rgba(20, 0, 0, 0.85) !important;
+            border-color: rgba(255, 0, 64, 0.3) !important;
+        }
+        .theme-neon-red .card-header {
+            background: rgba(255, 0, 64, 0.08) !important;
+            border-bottom-color: rgba(255, 0, 64, 0.3) !important;
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .card-header i {
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .kpi-plant-block {
+            background: rgba(20, 0, 0, 0.85) !important;
+            border-color: rgba(255, 0, 64, 0.3) !important;
+        }
+        .theme-neon-red .kpi-plant-block .label {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .kpi-plant-block .value {
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .kpi-plant-block .details {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .kpi-plant-block .details .plant-name {
+            background: rgba(255, 0, 64, 0.15) !important;
+            color: #FF0040 !important;
+        }
+        .theme-neon-red table thead th {
+            background: rgba(255, 0, 64, 0.2) !important;
+            color: #FF0040 !important;
+        }
+        .theme-neon-red table tbody td {
+            border-bottom-color: rgba(255, 0, 64, 0.1) !important;
+            color: #ff6688 !important;
+        }
+        .theme-neon-red table tbody tr:hover {
+            background: rgba(255, 0, 64, 0.05) !important;
+        }
+        .theme-neon-red table tfoot td {
+            background: rgba(255, 0, 64, 0.08) !important;
+            border-top-color: rgba(255, 0, 64, 0.3) !important;
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .compact-best-findings {
+            background: rgba(255, 0, 64, 0.08) !important;
+            border-color: rgba(255, 0, 64, 0.3) !important;
+        }
+        .theme-neon-red .compact-best-findings .item {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .compact-best-findings .item .label {
+            color: #883344 !important;
+        }
+        .theme-neon-red .compact-best-findings .item .value {
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .compact-best-findings .item .name {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .compact-best-findings .divider {
+            background: rgba(255, 0, 64, 0.3) !important;
+        }
+        .theme-neon-red .region-findings {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .tab-btn.active {
+            color: #FF0040 !important;
+            border-bottom-color: #FF0040 !important;
+        }
+        .theme-neon-red .tab-btn {
+            color: #883344 !important;
+        }
+        .theme-neon-red .tabs {
+            border-bottom-color: rgba(255, 0, 64, 0.3) !important;
+        }
+        .theme-neon-red .sort-info {
+            background: rgba(255, 0, 64, 0.1) !important;
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .upload-area .filter-label {
+            color: #ff6688 !important;
+        }
+        .theme-neon-red .upload-area select {
+            background: rgba(20, 0, 0, 0.85) !important;
+            border-color: rgba(255, 0, 64, 0.3) !important;
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .upload-area select option {
+            background: #1a0000 !important;
+            color: #FF0040 !important;
+        }
+        .theme-neon-red .upload-area input[type="file"]::file-selector-button {
+            background: #FF0040 !important;
+            color: #0a0000 !important;
+        }
+        .theme-neon-red .upload-area input[type="file"]::file-selector-button:hover {
+            background: #DD0033 !important;
+        }
+        .theme-neon-red .ach-bar {
+            background: rgba(255, 0, 64, 0.15) !important;
+        }
+        .theme-neon-red .chart-legend {
+            color: #883344 !important;
+        }
+        .theme-neon-red .scrollable-table::-webkit-scrollbar-thumb {
+            background: rgba(255, 0, 64, 0.3) !important;
+        }
+        .theme-neon-red .download-btn {
+            background: #FF0040 !important;
+            color: #0a0000 !important;
+        }
+        .theme-neon-red .download-btn:hover {
+            background: #DD0033 !important;
+        }
+        .theme-neon-red .theme-divider {
+            background: rgba(255, 0, 64, 0.3) !important;
+        }
+
+        /* NEON BLUE */
+        .theme-neon-blue {
+            background: #00000a !important;
+        }
+        .theme-neon-blue .header {
+            border-bottom-color: #00D4FF !important;
+        }
+        .theme-neon-blue .header-left h1 {
+            color: #00D4FF !important;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+        .theme-neon-blue .header-left .sub {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .header-right {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .kpi-card {
+            background: rgba(0, 212, 255, 0.08) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.05);
+        }
+        .theme-neon-blue .kpi-card .icon {
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .kpi-card .label {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .kpi-card .value {
+            color: #00D4FF !important;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+        .theme-neon-blue .kpi-card .value.red { color: #00D4FF !important; }
+        .theme-neon-blue .kpi-card .value.green { color: #00D4FF !important; }
+        .theme-neon-blue .kpi-card .value.blue { color: #66eeff !important; }
+        .theme-neon-blue .kpi-card .value.orange { color: #FFDD00 !important; }
+        .theme-neon-blue .kpi-card .sub { color: #3388aa !important; }
+        .theme-neon-blue .card {
+            background: rgba(0, 0, 20, 0.85) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+        }
+        .theme-neon-blue .card-header {
+            background: rgba(0, 212, 255, 0.08) !important;
+            border-bottom-color: rgba(0, 212, 255, 0.3) !important;
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .card-header i {
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .kpi-plant-block {
+            background: rgba(0, 0, 20, 0.85) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+        }
+        .theme-neon-blue .kpi-plant-block .label {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .kpi-plant-block .value {
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .kpi-plant-block .details {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .kpi-plant-block .details .plant-name {
+            background: rgba(0, 212, 255, 0.15) !important;
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue table thead th {
+            background: rgba(0, 212, 255, 0.2) !important;
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue table tbody td {
+            border-bottom-color: rgba(0, 212, 255, 0.1) !important;
+            color: #66eeff !important;
+        }
+        .theme-neon-blue table tbody tr:hover {
+            background: rgba(0, 212, 255, 0.05) !important;
+        }
+        .theme-neon-blue table tfoot td {
+            background: rgba(0, 212, 255, 0.08) !important;
+            border-top-color: rgba(0, 212, 255, 0.3) !important;
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .compact-best-findings {
+            background: rgba(0, 212, 255, 0.08) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+        }
+        .theme-neon-blue .compact-best-findings .item {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .compact-best-findings .item .label {
+            color: #3388aa !important;
+        }
+        .theme-neon-blue .compact-best-findings .item .value {
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .compact-best-findings .item .name {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .compact-best-findings .divider {
+            background: rgba(0, 212, 255, 0.3) !important;
+        }
+        .theme-neon-blue .region-findings {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .tab-btn.active {
+            color: #00D4FF !important;
+            border-bottom-color: #00D4FF !important;
+        }
+        .theme-neon-blue .tab-btn {
+            color: #3388aa !important;
+        }
+        .theme-neon-blue .tabs {
+            border-bottom-color: rgba(0, 212, 255, 0.3) !important;
+        }
+        .theme-neon-blue .sort-info {
+            background: rgba(0, 212, 255, 0.1) !important;
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .upload-area .filter-label {
+            color: #66eeff !important;
+        }
+        .theme-neon-blue .upload-area select {
+            background: rgba(0, 0, 20, 0.85) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .upload-area select option {
+            background: #00001a !important;
+            color: #00D4FF !important;
+        }
+        .theme-neon-blue .upload-area input[type="file"]::file-selector-button {
+            background: #00D4FF !important;
+            color: #00000a !important;
+        }
+        .theme-neon-blue .upload-area input[type="file"]::file-selector-button:hover {
+            background: #00BBDD !important;
+        }
+        .theme-neon-blue .ach-bar {
+            background: rgba(0, 212, 255, 0.15) !important;
+        }
+        .theme-neon-blue .chart-legend {
+            color: #3388aa !important;
+        }
+        .theme-neon-blue .scrollable-table::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3) !important;
+        }
+        .theme-neon-blue .download-btn {
+            background: #00D4FF !important;
+            color: #00000a !important;
+        }
+        .theme-neon-blue .download-btn:hover {
+            background: #00BBDD !important;
+        }
+        .theme-neon-blue .theme-divider {
+            background: rgba(0, 212, 255, 0.3) !important;
+        }
+
+        /* NEON YELLOW */
+        .theme-neon-yellow {
+            background: #0a0a00 !important;
+        }
+        .theme-neon-yellow .header {
+            border-bottom-color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .header-left h1 {
+            color: #FFDD00 !important;
+            text-shadow: 0 0 20px rgba(255, 221, 0, 0.5);
+        }
+        .theme-neon-yellow .header-left .sub {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .header-right {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .kpi-card {
+            background: rgba(255, 221, 0, 0.08) !important;
+            border-color: rgba(255, 221, 0, 0.3) !important;
+            box-shadow: 0 0 20px rgba(255, 221, 0, 0.05);
+        }
+        .theme-neon-yellow .kpi-card .icon {
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .kpi-card .label {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .kpi-card .value {
+            color: #FFDD00 !important;
+            text-shadow: 0 0 10px rgba(255, 221, 0, 0.3);
+        }
+        .theme-neon-yellow .kpi-card .value.red { color: #FFDD00 !important; }
+        .theme-neon-yellow .kpi-card .value.green { color: #FFDD00 !important; }
+        .theme-neon-yellow .kpi-card .value.blue { color: #ffee88 !important; }
+        .theme-neon-yellow .kpi-card .value.orange { color: #FF8800 !important; }
+        .theme-neon-yellow .kpi-card .sub { color: #aa8833 !important; }
+        .theme-neon-yellow .card {
+            background: rgba(10, 10, 0, 0.85) !important;
+            border-color: rgba(255, 221, 0, 0.3) !important;
+        }
+        .theme-neon-yellow .card-header {
+            background: rgba(255, 221, 0, 0.08) !important;
+            border-bottom-color: rgba(255, 221, 0, 0.3) !important;
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .card-header i {
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .kpi-plant-block {
+            background: rgba(10, 10, 0, 0.85) !important;
+            border-color: rgba(255, 221, 0, 0.3) !important;
+        }
+        .theme-neon-yellow .kpi-plant-block .label {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .kpi-plant-block .value {
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .kpi-plant-block .details {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .kpi-plant-block .details .plant-name {
+            background: rgba(255, 221, 0, 0.15) !important;
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow table thead th {
+            background: rgba(255, 221, 0, 0.2) !important;
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow table tbody td {
+            border-bottom-color: rgba(255, 221, 0, 0.1) !important;
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow table tbody tr:hover {
+            background: rgba(255, 221, 0, 0.05) !important;
+        }
+        .theme-neon-yellow table tfoot td {
+            background: rgba(255, 221, 0, 0.08) !important;
+            border-top-color: rgba(255, 221, 0, 0.3) !important;
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .compact-best-findings {
+            background: rgba(255, 221, 0, 0.08) !important;
+            border-color: rgba(255, 221, 0, 0.3) !important;
+        }
+        .theme-neon-yellow .compact-best-findings .item {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .compact-best-findings .item .label {
+            color: #aa8833 !important;
+        }
+        .theme-neon-yellow .compact-best-findings .item .value {
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .compact-best-findings .item .name {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .compact-best-findings .divider {
+            background: rgba(255, 221, 0, 0.3) !important;
+        }
+        .theme-neon-yellow .region-findings {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .tab-btn.active {
+            color: #FFDD00 !important;
+            border-bottom-color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .tab-btn {
+            color: #aa8833 !important;
+        }
+        .theme-neon-yellow .tabs {
+            border-bottom-color: rgba(255, 221, 0, 0.3) !important;
+        }
+        .theme-neon-yellow .sort-info {
+            background: rgba(255, 221, 0, 0.1) !important;
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .upload-area .filter-label {
+            color: #ffee88 !important;
+        }
+        .theme-neon-yellow .upload-area select {
+            background: rgba(10, 10, 0, 0.85) !important;
+            border-color: rgba(255, 221, 0, 0.3) !important;
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .upload-area select option {
+            background: #1a1a00 !important;
+            color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .upload-area input[type="file"]::file-selector-button {
+            background: #FFDD00 !important;
+            color: #0a0a00 !important;
+        }
+        .theme-neon-yellow .upload-area input[type="file"]::file-selector-button:hover {
+            background: #E6C700 !important;
+        }
+        .theme-neon-yellow .ach-bar {
+            background: rgba(255, 221, 0, 0.15) !important;
+        }
+        .theme-neon-yellow .chart-legend {
+            color: #aa8833 !important;
+        }
+        .theme-neon-yellow .scrollable-table::-webkit-scrollbar-thumb {
+            background: rgba(255, 221, 0, 0.3) !important;
+        }
+        .theme-neon-yellow .download-btn {
+            background: #FFDD00 !important;
+            color: #0a0a00 !important;
+        }
+        .theme-neon-yellow .download-btn:hover {
+            background: #E6C700 !important;
+        }
+        .theme-neon-yellow .theme-divider {
+            background: rgba(255, 221, 0, 0.3) !important;
         }
 
         @media (max-width: 1024px) {
-            .kpi-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .plant-two-col {
-                grid-template-columns: 1fr;
-                flex: 1;
-            }
-            .plant-right-col .card:last-child {
-                min-height: 140px;
-                height: 140px;
-            }
-            .dashboard {
-                padding: 8px 12px;
-            }
-            .header-left h1 {
-                font-size: 18px;
-            }
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-            .compact-best-findings {
-                gap: 8px 12px;
-                padding: 5px 10px;
-            }
-            .compact-best-findings .item {
-                font-size: 9px;
-                white-space: normal;
-            }
-            .region-findings {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+            .plant-two-col { grid-template-columns: 1fr; flex: 1; }
+            .plant-right-col .card:last-child { min-height: 140px; height: 140px; }
+            .dashboard { padding: 8px 12px; }
+            .header-left h1 { font-size: 18px; }
+            .two-col { grid-template-columns: 1fr; }
+            .compact-best-findings { gap: 8px 12px; padding: 5px 10px; }
+            .compact-best-findings .item { font-size: 9px; white-space: normal; }
+            .region-findings { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 768px) {
-            .kpi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
-            }
-            .header-right {
-                width: 100%;
-                justify-content: flex-start;
-            }
-            .upload-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            #regionKPIPlants {
-                flex-direction: column;
-            }
-            .download-area {
-                margin-left: 0;
-                width: 100%;
-            }
-            .plant-right-col .card:last-child {
-                min-height: 120px;
-                height: 120px;
-            }
-            .compact-best-findings {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 4px;
-                min-height: auto;
-                padding: 6px 10px;
-            }
-            .compact-best-findings .divider {
-                display: none;
-            }
-            .compact-best-findings .item {
-                white-space: normal;
-            }
-            .region-findings {
-                grid-template-columns: 1fr 1fr;
-            }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .header { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .header-right { width: 100%; justify-content: flex-start; }
+            .upload-area { flex-direction: column; align-items: stretch; }
+            #regionKPIPlants { flex-direction: column; }
+            .download-area { margin-left: 0; width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+            .theme-toggle-area { margin-left: auto; }
+            .plant-right-col .card:last-child { min-height: 120px; height: 120px; }
+            .compact-best-findings { flex-direction: column; align-items: stretch; gap: 4px; min-height: auto; padding: 6px 10px; }
+            .compact-best-findings .divider { display: none; }
+            .compact-best-findings .item { white-space: normal; }
+            .region-findings { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 480px) {
-            .kpi-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .kpi-card .value {
-                font-size: 14px;
-            }
-            .kpi-card {
-                padding: 4px 6px;
-            }
-            .tab-btn {
-                padding: 4px 12px;
-                font-size: 10px;
-            }
-            .dashboard {
-                padding: 4px 8px;
-            }
-            .plant-right-col .card:last-child {
-                min-height: 100px;
-                height: 100px;
-            }
-            .region-findings {
-                grid-template-columns: 1fr;
-            }
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .kpi-card .value { font-size: 14px; }
+            .kpi-card { padding: 4px 6px; }
+            .tab-btn { padding: 4px 12px; font-size: 10px; }
+            .dashboard { padding: 4px 8px; }
+            .plant-right-col .card:last-child { min-height: 100px; height: 100px; }
+            .region-findings { grid-template-columns: 1fr; }
+            .theme-toggle-area { margin-left: 0; width: 100%; justify-content: center; }
+            .theme-btn { width: 24px; height: 24px; }
         }
 </style>
 </head>
 <body>
-    <div class="dashboard">
+    <div class="dashboard" id="dashboard">
         <!-- Header -->
         <div class="header">
             <div class="header-left">
@@ -834,6 +1412,24 @@
                 </select>
             </div>
             <div class="download-area">
+                <div class="theme-toggle-area">
+                    <button class="theme-btn active" data-theme="default" onclick="setTheme('default')">
+                        <span class="tooltip">Default</span>
+                    </button>
+                    <button class="theme-btn" data-theme="green-neon" onclick="setTheme('green-neon')">
+                        <span class="tooltip">Green Neon</span>
+                    </button>
+                    <button class="theme-btn" data-theme="neon-red" onclick="setTheme('neon-red')">
+                        <span class="tooltip">Neon Red</span>
+                    </button>
+                    <button class="theme-btn" data-theme="neon-blue" onclick="setTheme('neon-blue')">
+                        <span class="tooltip">Neon Blue</span>
+                    </button>
+                    <button class="theme-btn" data-theme="neon-yellow" onclick="setTheme('neon-yellow')">
+                        <span class="tooltip">Neon Yellow</span>
+                    </button>
+                </div>
+                <span class="theme-divider"></span>
                 <button class="download-btn" onclick="downloadDashboard()">
                     <i class="fa fa-download"></i> Download PNG
                 </button>
@@ -848,7 +1444,6 @@
         <div id="contentArea">
             <!-- ===== REGION VIEW ===== -->
             <div id="regionView">
-                <!-- KPI -->
                 <div class="kpi-grid">
                     <div class="kpi-card">
                         <i class="fa fa-building icon"></i>
@@ -881,7 +1476,6 @@
                         <div class="sub">(Delivered / Order)</div>
                     </div>
                 </div>
-                <!-- Two Col -->
                 <div class="two-col">
                     <div class="card">
                         <div class="card-header">
@@ -928,7 +1522,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Region Findings with icons -->
                 <div class="region-findings" id="regionFindings">
                     <div class="item">
                         <span class="icon"><i class="fa fa-check-circle" style="color:#009E5F;"></i></span>
@@ -954,7 +1547,6 @@
             </div>
             <!-- ===== PLANT VIEW ===== -->
             <div id="plantView" class="hidden">
-                <!-- KPI -->
                 <div class="kpi-grid">
                     <div class="kpi-card">
                         <i class="fa fa-building icon"></i>
@@ -988,9 +1580,7 @@
                     </div>
                 </div>
 
-                <!-- Plant two column: Achievement Chart (same width as region chart) | Table + Remain Chart -->
                 <div class="plant-two-col">
-                    <!-- Left: Achievement Chart - same size as region chart -->
                     <div class="card">
                         <div class="card-header">
                             <i class="fa fa-line-chart"></i> TOP PLANT ACHIEVEMENT
@@ -1013,9 +1603,7 @@
                         </div>
                     </div>
 
-                    <!-- Right: Table + Remain Chart -->
                     <div class="plant-right-col">
-                        <!-- Table -->
                         <div class="card">
                             <div class="card-header">
                                 <i class="fa fa-list"></i> PLANT PERFORMANCE DETAIL
@@ -1040,7 +1628,6 @@
                             </div>
                         </div>
 
-                        <!-- Remain Volume Chart (below table, same width) - hidden when All Regions selected -->
                         <div class="card remain-chart-card hidden" id="remainChartCard">
                             <div class="card-header">
                                 <i class="fa fa-cube" style="color:#0066CC;"></i> VOLUME REMAIN BY PLANT
@@ -1061,7 +1648,6 @@
                     </div>
                 </div>
 
-                <!-- Compact Best Performer & Findings - single row -->
                 <div class="compact-best-findings" id="compactFindings">
                     <div class="item">
                         <span class="icon"><i class="fa fa-trophy" style="color:#009E5F;"></i></span>
@@ -1121,8 +1707,8 @@
         let allData = { regions: {}, plants: [], reportDate: null };
         let contribChart, plantChart, remainChart;
         let currentSort = { column: 'achievement', direction: 'desc' };
+        let currentTheme = 'default';
 
-        // Column name mapping for display
         const columnNames = {
             'name': 'Plant Name',
             'order': 'Order',
@@ -1130,6 +1716,121 @@
             'remaining': 'Remaining',
             'achievement': 'Achievement'
         };
+
+        function setTheme(theme) {
+            const dashboard = document.getElementById('dashboard');
+            dashboard.classList.remove('theme-green-neon', 'theme-neon-red', 'theme-neon-blue', 'theme-neon-yellow');
+            
+            if (theme !== 'default') {
+                dashboard.classList.add('theme-' + theme);
+            }
+            
+            currentTheme = theme;
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+            
+            setTimeout(() => {
+                updateAllCharts();
+            }, 100);
+        }
+
+        function getThemeColors() {
+            const colors = {
+                'default': {
+                    bg: '#f0f2f5',
+                    primary: '#E21B23',
+                    text: '#000000',
+                    label: '#6B7280',
+                    sub: '#9CA3AF',
+                    border: 'rgba(200,200,200,0.2)',
+                    cardBg: 'white',
+                    cardBorder: '#e5e7eb'
+                },
+                'green-neon': {
+                    bg: '#0a0f0a',
+                    primary: '#00FF41',
+                    text: '#88ff99',
+                    label: '#88ff99',
+                    sub: '#66aa77',
+                    border: 'rgba(0,255,65,0.15)',
+                    cardBg: 'rgba(0, 20, 0, 0.85)',
+                    cardBorder: 'rgba(0, 255, 65, 0.3)'
+                },
+                'neon-red': {
+                    bg: '#0a0000',
+                    primary: '#FF0040',
+                    text: '#ff6688',
+                    label: '#ff6688',
+                    sub: '#883344',
+                    border: 'rgba(255,0,64,0.15)',
+                    cardBg: 'rgba(20, 0, 0, 0.85)',
+                    cardBorder: 'rgba(255, 0, 64, 0.3)'
+                },
+                'neon-blue': {
+                    bg: '#00000a',
+                    primary: '#00D4FF',
+                    text: '#66eeff',
+                    label: '#66eeff',
+                    sub: '#3388aa',
+                    border: 'rgba(0,212,255,0.15)',
+                    cardBg: 'rgba(0, 0, 20, 0.85)',
+                    cardBorder: 'rgba(0, 212, 255, 0.3)'
+                },
+                'neon-yellow': {
+                    bg: '#0a0a00',
+                    primary: '#FFDD00',
+                    text: '#ffee88',
+                    label: '#ffee88',
+                    sub: '#aa8833',
+                    border: 'rgba(255,221,0,0.15)',
+                    cardBg: 'rgba(10, 10, 0, 0.85)',
+                    cardBorder: 'rgba(255, 221, 0, 0.3)'
+                }
+            };
+            return colors[currentTheme] || colors['default'];
+        }
+
+        function getChartLabelColor() {
+            if (currentTheme === 'green-neon') return '#00FF41';
+            if (currentTheme === 'neon-red') return '#FF0040';
+            if (currentTheme === 'neon-blue') return '#00D4FF';
+            if (currentTheme === 'neon-yellow') return '#FFDD00';
+            return '#000000';
+        }
+
+        function getGridColor() {
+            if (currentTheme === 'green-neon') return 'rgba(0,255,65,0.15)';
+            if (currentTheme === 'neon-red') return 'rgba(255,0,64,0.15)';
+            if (currentTheme === 'neon-blue') return 'rgba(0,212,255,0.15)';
+            if (currentTheme === 'neon-yellow') return 'rgba(255,221,0,0.15)';
+            return 'rgba(200,200,200,0.2)';
+        }
+
+        function getTickColor() {
+            if (currentTheme === 'green-neon') return '#88ff99';
+            if (currentTheme === 'neon-red') return '#ff6688';
+            if (currentTheme === 'neon-blue') return '#66eeff';
+            if (currentTheme === 'neon-yellow') return '#ffee88';
+            return '#000000';
+        }
+
+        function getBarColor() {
+            if (currentTheme === 'green-neon') return '#00FF41';
+            if (currentTheme === 'neon-red') return '#FF0040';
+            if (currentTheme === 'neon-blue') return '#00D4FF';
+            if (currentTheme === 'neon-yellow') return '#FFDD00';
+            return '#E21B23';
+        }
+
+        function getThemeColor() {
+            if (currentTheme === 'green-neon') return '#00FF41';
+            if (currentTheme === 'neon-red') return '#FF0040';
+            if (currentTheme === 'neon-blue') return '#00D4FF';
+            if (currentTheme === 'neon-yellow') return '#FFDD00';
+            return '#E21B23';
+        }
 
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -1144,7 +1845,6 @@
             const originalOverflow = dashboard.style.overflow;
             const originalHeight = dashboard.style.height;
             
-            // Siapkan untuk capture dengan kualitas tinggi
             dashboard.style.overflow = 'visible';
             dashboard.style.height = 'auto';
             
@@ -1153,47 +1853,155 @@
             const scrollX = window.scrollX;
             const scrollY = window.scrollY;
             
-            // Resize charts sebelum capture
             if (contribChart) contribChart.resize();
             if (plantChart) plantChart.resize();
             if (remainChart) remainChart.resize();
             
-            // Gunakan html2canvas dengan pengaturan kualitas tinggi
+            const colors = getThemeColors();
+            
             html2canvas(activeView, {
-                scale: 3, // Scale lebih tinggi untuk kualitas lebih baik
+                scale: 3,
                 useCORS: true,
                 logging: false,
-                backgroundColor: '#f0f2f5',
+                backgroundColor: colors.bg,
                 allowTaint: true,
                 width: activeView.scrollWidth,
                 height: activeView.scrollHeight,
                 windowWidth: activeView.scrollWidth,
                 windowHeight: activeView.scrollHeight,
-                pixelRatio: 3, // Pixel ratio tinggi untuk sharpness
+                pixelRatio: 3,
                 imageTimeout: 0,
                 removeContainer: true,
-                onclone: function(clonedDoc) {
-                    // Pastikan chart dirender dengan baik di clone
-                    const canvases = clonedDoc.querySelectorAll('canvas');
-                    canvases.forEach(c => {
-                        const ctx = c.getContext('2d');
-                        ctx.imageSmoothingEnabled = true;
-                        ctx.imageSmoothingQuality = 'high';
+                onclone: function(doc) {
+                    // Fix KPI Cards
+                    const kpiCards = doc.querySelectorAll('.kpi-card');
+                    kpiCards.forEach(card => {
+                        card.style.background = colors.cardBg;
+                        card.style.borderColor = colors.cardBorder;
+                        
+                        const icon = card.querySelector('.icon');
+                        if (icon) icon.style.color = colors.primary;
+                        
+                        const label = card.querySelector('.label');
+                        if (label) label.style.color = colors.label;
+                        
+                        const value = card.querySelector('.value');
+                        if (value) value.style.color = colors.primary;
+                        
+                        const sub = card.querySelector('.sub');
+                        if (sub) sub.style.color = colors.sub;
+                    });
+                    
+                    // Fix Table Footer
+                    const tfoots = doc.querySelectorAll('tfoot td');
+                    tfoots.forEach(td => {
+                        td.style.color = colors.primary;
+                        td.style.background = colors.cardBg;
+                        td.style.borderTopColor = colors.cardBorder;
+                    });
+                    
+                    // Fix tfoot row
+                    const tfootRows = doc.querySelectorAll('tfoot tr');
+                    tfootRows.forEach(row => {
+                        row.style.background = colors.cardBg;
+                    });
+                    
+                    // Fix Plant blocks
+                    const plantBlocks = doc.querySelectorAll('.kpi-plant-block');
+                    plantBlocks.forEach(block => {
+                        block.style.background = colors.cardBg;
+                        block.style.borderColor = colors.cardBorder;
+                        
+                        const label = block.querySelector('.label');
+                        if (label) label.style.color = colors.label;
+                        
+                        const value = block.querySelector('.value');
+                        if (value) value.style.color = colors.primary;
+                        
+                        const details = block.querySelector('.details');
+                        if (details) details.style.color = colors.text;
+                    });
+                    
+                    // Fix Compact Findings
+                    const findings = doc.querySelectorAll('.compact-best-findings');
+                    findings.forEach(f => {
+                        f.style.background = colors.cardBg;
+                        f.style.borderColor = colors.cardBorder;
+                        
+                        const items = f.querySelectorAll('.item');
+                        items.forEach(item => {
+                            item.style.color = colors.text;
+                            const label = item.querySelector('.label');
+                            if (label) label.style.color = colors.sub;
+                            const value = item.querySelector('.value');
+                            if (value) value.style.color = colors.primary;
+                            const name = item.querySelector('.name');
+                            if (name) name.style.color = colors.text;
+                        });
+                        
+                        const dividers = f.querySelectorAll('.divider');
+                        dividers.forEach(d => {
+                            d.style.background = colors.cardBorder;
+                        });
+                    });
+                    
+                    // Fix Region Findings
+                    const regionFindings = doc.querySelectorAll('.region-findings');
+                    regionFindings.forEach(f => {
+                        f.style.color = colors.text;
+                        const strongs = f.querySelectorAll('strong');
+                        strongs.forEach(s => {
+                            s.style.color = colors.primary;
+                        });
+                    });
+                    
+                    // Fix Card Headers
+                    const cardHeaders = doc.querySelectorAll('.card-header');
+                    cardHeaders.forEach(header => {
+                        header.style.background = colors.cardBg;
+                        header.style.borderBottomColor = colors.cardBorder;
+                        header.style.color = colors.primary;
+                        const icon = header.querySelector('i');
+                        if (icon) icon.style.color = colors.primary;
+                    });
+                    
+                    // Fix Table Headers
+                    const theadThs = doc.querySelectorAll('table thead th');
+                    theadThs.forEach(th => {
+                        th.style.background = colors.cardBg;
+                        th.style.color = colors.primary;
+                        th.style.borderBottom = '2px solid ' + colors.cardBorder;
+                    });
+                    
+                    // Fix Table Body
+                    const tbodyTds = doc.querySelectorAll('table tbody td');
+                    tbodyTds.forEach(td => {
+                        td.style.color = colors.text;
+                        td.style.borderBottomColor = colors.border;
+                    });
+                    
+                    // Fix Sort Info
+                    const sortInfos = doc.querySelectorAll('.sort-info');
+                    sortInfos.forEach(info => {
+                        info.style.background = colors.cardBg;
+                        info.style.color = colors.label;
+                    });
+                    
+                    // Fix Chart Legends
+                    const legends = doc.querySelectorAll('.chart-legend');
+                    legends.forEach(legend => {
+                        legend.style.color = colors.sub;
                     });
                 }
             }).then(canvas => {
-                // Kembalikan style dashboard
                 dashboard.style.overflow = originalOverflow;
                 dashboard.style.height = originalHeight;
                 window.scrollTo(scrollX, scrollY);
                 
-                // Buat image dengan kualitas tinggi
                 const link = document.createElement('a');
                 const tabName = isRegionView ? 'Region' : 'Plant';
                 const dateStr = allData.reportDate ? allData.reportDate.replace(/\s/g, '_') : 'report';
                 link.download = `SCG_Performance_${tabName}_${dateStr}.png`;
-                
-                // Konversi ke PNG dengan kualitas tinggi
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             }).catch(error => {
@@ -1234,14 +2042,12 @@
         });
         excelInput.addEventListener('change', handleFile);
 
-        // Add sorting event listeners to table headers
         document.addEventListener('click', function(e) {
             const th = e.target.closest('th[data-sort]');
             if (th) {
                 const sortKey = th.dataset.sort;
                 const table = th.closest('table');
                 
-                // Toggle direction
                 if (currentSort.column === sortKey) {
                     currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
                 } else {
@@ -1249,7 +2055,6 @@
                     currentSort.direction = 'asc';
                 }
                 
-                // Update sort icons
                 const allHeaders = table.querySelectorAll('th[data-sort]');
                 allHeaders.forEach(h => {
                     const icon = h.querySelector('.sort-icon');
@@ -1259,7 +2064,6 @@
                     }
                 });
                 
-                // Re-render everything with new sort
                 renderPlantData();
             }
         });
@@ -1317,13 +2121,8 @@
 
             plants.forEach(p => {
                 const ach = p.order > 0 ? (p.delivered / p.order * 100).toFixed(1) : '0.0';
-                const volumeClass = getVolumeClass(p.order);
-                const styleAttr = volumeClass !== null ?
-                    `style="background-color:${getVolumeColor(p.order)};border-left:3px solid ${getVolumeBorderColor(p.order)}"` :
-                    '';
-
                 tbody.innerHTML += `
-                        <tr class="${volumeClass || ''}" ${styleAttr}>
+                        <tr>
                             <td>${p.name}</td>
                             <td class="text-right">${formatNumberDec(p.order)}</td>
                             <td class="text-right">${formatNumberDec(p.delivered)}</td>
@@ -1338,15 +2137,15 @@
                         <td class="text-right">${formatNumberDec(totalOrder)}</td>
                         <td class="text-right">${formatNumberDec(totalDelivered)}</td>
                         <td class="text-right">${formatNumberDec(totalRemain)}</td>
-                        <td class="text-right" style="color:#E21B23;font-weight:700">${totalAch}%</td>
+                        <td class="text-right" style="color:${getThemeColor()};font-weight:700">${totalAch}%</td>
                     </tr>`;
         }
 
         function updateAchievementChart(plants) {
-            // Get top 10 plants based on current sort
             const topPlants = plants.slice(0, 10);
             const achLabels = topPlants.map(p => p.name.length > 16 ? p.name.substring(0, 14) + '…' : p.name);
             const achValues = topPlants.map(p => p.order > 0 ? (p.delivered / p.order * 100).toFixed(1) : 0);
+            
             const achColors = achValues.map(v => getAchColor(parseFloat(v)));
 
             if (plantChart) {
@@ -1355,9 +2154,12 @@
             }
             
             const ctx = document.getElementById('plantChart').getContext('2d');
-            // Set high quality rendering
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
+            
+            const labelColor = getChartLabelColor();
+            const gridColor = getGridColor();
+            const tickColor = getTickColor();
             
             plantChart = new Chart(ctx, {
                 type: 'bar',
@@ -1366,7 +2168,9 @@
                     datasets: [{
                         data: achValues,
                         backgroundColor: achColors,
-                        borderRadius: 3,
+                        borderColor: achColors.map(c => c),
+                        borderWidth: 0,
+                        borderRadius: 4,
                         barThickness: 32,
                     }]
                 },
@@ -1374,7 +2178,7 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    devicePixelRatio: 3, // High DPI rendering
+                    devicePixelRatio: 3,
                     layout: {
                         padding: {
                             left: 10,
@@ -1386,17 +2190,21 @@
                     scales: {
                         x: {
                             max: 100,
-                            grid: { color: '#ECECEC' },
-                            ticks: { font: { size: 9 } },
+                            grid: { color: gridColor },
+                            ticks: { 
+                                font: { size: 9, weight: '600' },
+                                color: tickColor
+                            },
                             afterFit: function(axis) {
                                 axis.max += 5;
                             }
                         },
                         y: {
-                            grid: { color: '#ECECEC' },
+                            grid: { color: gridColor },
                             ticks: {
                                 font: { size: 10, weight: '600' },
-                                autoSkip: false
+                                autoSkip: false,
+                                color: tickColor
                             }
                         }
                     },
@@ -1405,7 +2213,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'right',
-                            color: '#000',
+                            color: labelColor,
                             font: { weight: '700', size: 11 },
                             formatter: v => v + '%',
                             offset: 2
@@ -1415,11 +2223,53 @@
                 plugins: [ChartDataLabels]
             });
 
-            // Update sort info on achievement chart header
             const sortInfo = document.getElementById('achSortInfo');
             const directionSymbol = currentSort.direction === 'asc' ? '▲' : '▼';
             const columnName = columnNames[currentSort.column] || currentSort.column;
             sortInfo.textContent = `Sorted by: ${columnName} ${directionSymbol}`;
+        }
+
+        function updateAllCharts() {
+            if (contribChart) {
+                const barColor = getBarColor();
+                contribChart.data.datasets[0].backgroundColor = barColor;
+                contribChart.options.scales.x.grid.color = getGridColor();
+                contribChart.options.scales.y.grid.color = getGridColor();
+                contribChart.options.scales.x.ticks.color = getTickColor();
+                contribChart.options.scales.y.ticks.color = getTickColor();
+                contribChart.options.plugins.datalabels.color = getChartLabelColor();
+                contribChart.update();
+            }
+            
+            if (plantChart) {
+                const achValues = plantChart.data.datasets[0].data;
+                const achColors = achValues.map(v => getAchColor(parseFloat(v)));
+                plantChart.data.datasets[0].backgroundColor = achColors;
+                plantChart.data.datasets[0].borderColor = achColors;
+                plantChart.options.scales.x.grid.color = getGridColor();
+                plantChart.options.scales.y.grid.color = getGridColor();
+                plantChart.options.scales.x.ticks.color = getTickColor();
+                plantChart.options.scales.y.ticks.color = getTickColor();
+                plantChart.options.plugins.datalabels.color = getChartLabelColor();
+                plantChart.update();
+            }
+            
+            if (remainChart) {
+                const remainValues = remainChart.data.datasets[0].data;
+                const remainColors = remainValues.map(v => {
+                    if (v > 100) return '#E21B23';
+                    if (v > 50) return '#F77F00';
+                    if (v > 20) return '#F59E0B';
+                    return '#0066CC';
+                });
+                remainChart.data.datasets[0].backgroundColor = remainColors;
+                remainChart.data.datasets[0].borderColor = remainColors;
+                remainChart.options.scales.y.grid.color = getGridColor();
+                remainChart.options.scales.y.ticks.color = getTickColor();
+                remainChart.options.scales.x.ticks.color = getTickColor();
+                remainChart.options.plugins.datalabels.color = getChartLabelColor();
+                remainChart.update();
+            }
         }
 
         function handleFile(e) {
@@ -1524,36 +2374,6 @@
             return '#E21B23';
         }
 
-        function getVolumeClass(order) {
-            if (order === 0) return 'volume-low-0';
-            if (order < 10) return 'volume-low-1';
-            if (order < 20) return 'volume-low-2';
-            if (order < 30) return 'volume-low-3';
-            if (order < 40) return 'volume-low-4';
-            if (order < 50) return 'volume-low-5';
-            return null;
-        }
-
-        function getVolumeColor(order) {
-            if (order === 0) return '#FFCDD2';
-            if (order < 10) return '#FFCDD2';
-            if (order < 20) return '#FFCDD2';
-            if (order < 30) return '#FFCDD2';
-            if (order < 40) return '#F8BBD0';
-            if (order < 50) return '#FCE4EC';
-            return 'transparent';
-        }
-
-        function getVolumeBorderColor(order) {
-            if (order === 0) return '#B71C1C';
-            if (order < 10) return '#C62828';
-            if (order < 20) return '#D32F2F';
-            if (order < 30) return '#E53935';
-            if (order < 40) return '#EF5350';
-            if (order < 50) return '#EF9A9A';
-            return 'transparent';
-        }
-
         function formatAchievement(ach) {
             const val = parseFloat(ach);
             const color = getAchColor(val);
@@ -1615,6 +2435,11 @@
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
+            const barColor = getBarColor();
+            const labelColor = getChartLabelColor();
+            const gridColor = getGridColor();
+            const tickColor = getTickColor();
+            
             contribChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1622,8 +2447,10 @@
                     datasets: [{
                         label: '% Contribution',
                         data: contribPct,
-                        backgroundColor: '#E21B23',
-                        borderRadius: 3,
+                        backgroundColor: barColor,
+                        borderColor: barColor,
+                        borderWidth: 0,
+                        borderRadius: 4,
                         barThickness: 32,
                     }]
                 },
@@ -1635,12 +2462,18 @@
                     scales: {
                         x: {
                             max: 40,
-                            grid: { color: '#ECECEC' },
-                            ticks: { font: { size: 9 } }
+                            grid: { color: gridColor },
+                            ticks: { 
+                                font: { size: 9 },
+                                color: tickColor
+                            }
                         },
                         y: {
-                            grid: { color: '#ECECEC' },
-                            ticks: { font: { size: 10, weight: '600' } }
+                            grid: { color: gridColor },
+                            ticks: { 
+                                font: { size: 10, weight: '600' },
+                                color: tickColor
+                            }
                         }
                     },
                     plugins: {
@@ -1648,7 +2481,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'right',
-                            color: '#000',
+                            color: labelColor,
                             font: { weight: '700', size: 11 },
                             formatter: v => v + '%'
                         }
@@ -1681,7 +2514,7 @@
                         <td class="text-right">${formatNumberDec(totalOrder)}</td>
                         <td class="text-right">${formatNumberDec(totalDelivered)}</td>
                         <td class="text-right">${formatNumberDec(totalRemain)}</td>
-                        <td class="text-right" style="color:#E21B23;font-weight:700">${pctDel}%</td>
+                        <td class="text-right" style="color:${getThemeColor()};font-weight:700">${pctDel}%</td>
                     </tr>`;
 
             let zeroVolPlants = [];
@@ -1785,6 +2618,10 @@
             ctxRemain.imageSmoothingEnabled = true;
             ctxRemain.imageSmoothingQuality = 'high';
             
+            const labelColor = getChartLabelColor();
+            const gridColor = getGridColor();
+            const tickColor = getTickColor();
+            
             remainChart = new Chart(ctxRemain, {
                 type: 'bar',
                 data: {
@@ -1793,7 +2630,9 @@
                         label: 'Remaining Volume (m³)',
                         data: remainValues.length > 0 ? remainValues : [0],
                         backgroundColor: remainColors.length > 0 ? remainColors : ['#D1D5DB'],
-                        borderRadius: 3,
+                        borderColor: remainColors.length > 0 ? remainColors : ['#D1D5DB'],
+                        borderWidth: 0,
+                        borderRadius: 4,
                         barThickness: 32,
                     }]
                 },
@@ -1813,21 +2652,23 @@
                         x: {
                             grid: { display: false },
                             ticks: {
-                                font: { size: 10, weight: '600', color: '#000000' },
+                                font: { size: 10, weight: '600' },
                                 maxRotation: 0,
                                 minRotation: 0,
                                 autoSkip: false,
                                 maxTicksLimit: 15,
-                                padding: 6
+                                padding: 6,
+                                color: tickColor
                             }
                         },
                         y: {
-                            grid: { color: '#ECECEC' },
+                            grid: { color: gridColor },
                             ticks: { 
-                                font: { size: 10, weight: '600', color: '#000000' } 
-                            },
-                            beginAtZero: true,
-                            padding: 6
+                                font: { size: 10, weight: '600' },
+                                beginAtZero: true,
+                                padding: 6,
+                                color: tickColor
+                            }
                         }
                     },
                     plugins: {
@@ -1835,7 +2676,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            color: '#000000',
+                            color: labelColor,
                             font: { weight: '700', size: 11 },
                             formatter: v => v > 0 ? formatNumberDec(v) : '',
                             offset: 3,
