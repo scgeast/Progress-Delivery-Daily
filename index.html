@@ -351,6 +351,20 @@
             font-size: 13px;
             transition: color 0.4s ease;
         }
+        .card-header-right {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 400;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.4s ease;
+        }
+        .card-header-right i {
+            color: #6B7280 !important;
+            font-size: 11px;
+        }
         .card-body {
             padding: 6px 10px;
             flex: 1;
@@ -770,6 +784,12 @@
         .theme-green-neon .card-header i {
             color: #00FF41 !important;
         }
+        .theme-green-neon .card-header-right {
+            color: #66aa77 !important;
+        }
+        .theme-green-neon .card-header-right i {
+            color: #66aa77 !important;
+        }
         .theme-green-neon .kpi-plant-block {
             background: rgba(0, 20, 0, 0.85) !important;
             border-color: rgba(0, 255, 65, 0.3) !important;
@@ -926,6 +946,12 @@
         }
         .theme-neon-red .card-header i {
             color: #FF0040 !important;
+        }
+        .theme-neon-red .card-header-right {
+            color: #883344 !important;
+        }
+        .theme-neon-red .card-header-right i {
+            color: #883344 !important;
         }
         .theme-neon-red .kpi-plant-block {
             background: rgba(20, 0, 0, 0.85) !important;
@@ -1084,6 +1110,12 @@
         .theme-neon-blue .card-header i {
             color: #00D4FF !important;
         }
+        .theme-neon-blue .card-header-right {
+            color: #3388aa !important;
+        }
+        .theme-neon-blue .card-header-right i {
+            color: #3388aa !important;
+        }
         .theme-neon-blue .kpi-plant-block {
             background: rgba(0, 0, 20, 0.85) !important;
             border-color: rgba(0, 212, 255, 0.3) !important;
@@ -1240,6 +1272,12 @@
         }
         .theme-neon-yellow .card-header i {
             color: #FFDD00 !important;
+        }
+        .theme-neon-yellow .card-header-right {
+            color: #aa8833 !important;
+        }
+        .theme-neon-yellow .card-header-right i {
+            color: #aa8833 !important;
         }
         .theme-neon-yellow .kpi-plant-block {
             background: rgba(10, 10, 0, 0.85) !important;
@@ -1586,6 +1624,10 @@
                             <i class="fa fa-line-chart"></i> TOP PLANT ACHIEVEMENT
                             <span style="font-weight:400;font-size:10px;color:#6B7280;margin-left:4px;" id="achFilterLabel">(All Regions)</span>
                             <span class="sort-info" id="achSortInfo">Sorted by: Achievement ▼</span>
+                            <span class="card-header-right" id="headerDateTime">
+                                <i class="fa fa-clock-o"></i>
+                                <span id="headerDateTimeText">-</span>
+                            </span>
                         </div>
                         <div class="card-body">
                             <div class="achievement-chart-wrapper">
@@ -1716,6 +1758,23 @@
             'remaining': 'Remaining',
             'achievement': 'Achievement'
         };
+
+        function updateHeaderDateTime() {
+            const now = new Date();
+            const options = { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            document.getElementById('headerDateTimeText').textContent = now.toLocaleString('id-ID', options);
+        }
+
+        setInterval(updateHeaderDateTime, 1000);
+        updateHeaderDateTime();
 
         function setTheme(theme) {
             const dashboard = document.getElementById('dashboard');
@@ -1859,8 +1918,9 @@
             
             const colors = getThemeColors();
             
+            // HIGH QUALITY DOWNLOAD - optimized for WhatsApp
             html2canvas(activeView, {
-                scale: 3,
+                scale: 4, // Increased from 3 to 4 for better quality
                 useCORS: true,
                 logging: false,
                 backgroundColor: colors.bg,
@@ -1869,11 +1929,12 @@
                 height: activeView.scrollHeight,
                 windowWidth: activeView.scrollWidth,
                 windowHeight: activeView.scrollHeight,
-                pixelRatio: 3,
+                pixelRatio: 4, // Increased for sharper text and charts
                 imageTimeout: 0,
                 removeContainer: true,
+                // Better rendering options
                 onclone: function(doc) {
-                    // Fix KPI Cards
+                    // Ensure all charts are rendered properly
                     const kpiCards = doc.querySelectorAll('.kpi-card');
                     kpiCards.forEach(card => {
                         card.style.background = colors.cardBg;
@@ -1892,7 +1953,6 @@
                         if (sub) sub.style.color = colors.sub;
                     });
                     
-                    // Fix Table Footer
                     const tfoots = doc.querySelectorAll('tfoot td');
                     tfoots.forEach(td => {
                         td.style.color = colors.primary;
@@ -1900,13 +1960,11 @@
                         td.style.borderTopColor = colors.cardBorder;
                     });
                     
-                    // Fix tfoot row
                     const tfootRows = doc.querySelectorAll('tfoot tr');
                     tfootRows.forEach(row => {
                         row.style.background = colors.cardBg;
                     });
                     
-                    // Fix Plant blocks
                     const plantBlocks = doc.querySelectorAll('.kpi-plant-block');
                     plantBlocks.forEach(block => {
                         block.style.background = colors.cardBg;
@@ -1922,7 +1980,6 @@
                         if (details) details.style.color = colors.text;
                     });
                     
-                    // Fix Compact Findings
                     const findings = doc.querySelectorAll('.compact-best-findings');
                     findings.forEach(f => {
                         f.style.background = colors.cardBg;
@@ -1945,7 +2002,6 @@
                         });
                     });
                     
-                    // Fix Region Findings
                     const regionFindings = doc.querySelectorAll('.region-findings');
                     regionFindings.forEach(f => {
                         f.style.color = colors.text;
@@ -1955,7 +2011,6 @@
                         });
                     });
                     
-                    // Fix Card Headers
                     const cardHeaders = doc.querySelectorAll('.card-header');
                     cardHeaders.forEach(header => {
                         header.style.background = colors.cardBg;
@@ -1963,9 +2018,15 @@
                         header.style.color = colors.primary;
                         const icon = header.querySelector('i');
                         if (icon) icon.style.color = colors.primary;
+                        
+                        const rightSpan = header.querySelector('.card-header-right');
+                        if (rightSpan) {
+                            rightSpan.style.color = colors.sub;
+                            const iconRight = rightSpan.querySelector('i');
+                            if (iconRight) iconRight.style.color = colors.sub;
+                        }
                     });
                     
-                    // Fix Table Headers
                     const theadThs = doc.querySelectorAll('table thead th');
                     theadThs.forEach(th => {
                         th.style.background = colors.cardBg;
@@ -1973,24 +2034,29 @@
                         th.style.borderBottom = '2px solid ' + colors.cardBorder;
                     });
                     
-                    // Fix Table Body
                     const tbodyTds = doc.querySelectorAll('table tbody td');
                     tbodyTds.forEach(td => {
                         td.style.color = colors.text;
                         td.style.borderBottomColor = colors.border;
                     });
                     
-                    // Fix Sort Info
                     const sortInfos = doc.querySelectorAll('.sort-info');
                     sortInfos.forEach(info => {
                         info.style.background = colors.cardBg;
                         info.style.color = colors.label;
                     });
                     
-                    // Fix Chart Legends
                     const legends = doc.querySelectorAll('.chart-legend');
                     legends.forEach(legend => {
                         legend.style.color = colors.sub;
+                    });
+                    
+                    // Ensure all text is sharp
+                    doc.querySelectorAll('*').forEach(el => {
+                        if (el.style) {
+                            el.style.fontSmoothing = 'antialiased';
+                            el.style.webkitFontSmoothing = 'antialiased';
+                        }
                     });
                 }
             }).then(canvas => {
@@ -1998,6 +2064,7 @@
                 dashboard.style.height = originalHeight;
                 window.scrollTo(scrollX, scrollY);
                 
+                // Convert to PNG with maximum quality
                 const link = document.createElement('a');
                 const tabName = isRegionView ? 'Region' : 'Plant';
                 const dateStr = allData.reportDate ? allData.reportDate.replace(/\s/g, '_') : 'report';
@@ -2178,7 +2245,7 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    devicePixelRatio: 3,
+                    devicePixelRatio: 4, // Increased for sharper rendering
                     layout: {
                         padding: {
                             left: 10,
@@ -2458,7 +2525,7 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    devicePixelRatio: 3,
+                    devicePixelRatio: 4, // Increased for sharper rendering
                     scales: {
                         x: {
                             max: 40,
@@ -2639,7 +2706,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    devicePixelRatio: 3,
+                    devicePixelRatio: 4, // Increased for sharper rendering
                     layout: {
                         padding: {
                             left: 10,
