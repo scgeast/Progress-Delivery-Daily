@@ -1804,6 +1804,200 @@ table tfoot td{
     .kpi-card .icon{width:38px !important;height:38px !important;font-size:16px !important;}
 }
 
+
+/* =========================================================
+   FINAL UI TUNING — HEADER ACTIONS + COMPACT KPI
+   ========================================================= */
+
+/* Header: title left, date + modes + download right, same row */
+.header{
+    align-items:center !important;
+    padding-bottom:10px !important;
+    margin-bottom:10px !important;
+}
+
+.header-right{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:14px !important;
+    padding-bottom:0 !important;
+}
+
+.header-actions{
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+}
+
+.header-actions .theme-toggle-area{
+    display:flex !important;
+    align-items:center !important;
+    gap:6px !important;
+}
+
+/* Mode buttons: white center, colored border */
+.header-actions .theme-btn{
+    width:30px !important;
+    height:30px !important;
+    border-radius:8px !important;
+    background:#ffffff !important;
+    border:2px solid #64748b !important;
+    box-shadow:0 3px 10px rgba(0,0,0,.18) !important;
+    position:relative;
+    transition:all .22s ease !important;
+}
+
+/* Border colors per mode */
+.header-actions .theme-btn[data-theme="default"]{
+    border-color:#ef233c !important;
+}
+.header-actions .theme-btn[data-theme="green-neon"]{
+    border-color:#00c878 !important;
+}
+.header-actions .theme-btn[data-theme="neon-red"]{
+    border-color:#ff0040 !important;
+}
+.header-actions .theme-btn[data-theme="neon-blue"]{
+    border-color:#00d4ff !important;
+}
+.header-actions .theme-btn[data-theme="neon-yellow"]{
+    border-color:#ffdd00 !important;
+}
+
+.header-actions .theme-btn:hover{
+    transform:translateY(-2px) !important;
+    background:#ffffff !important;
+    box-shadow:0 6px 14px rgba(0,0,0,.25) !important;
+}
+
+.header-actions .theme-btn.active{
+    background:#ffffff !important;
+    transform:translateY(-1px) scale(1.04) !important;
+    box-shadow:0 0 0 2px rgba(255,255,255,.85),0 6px 15px rgba(0,0,0,.28) !important;
+}
+
+/* Small colored inner dot so the button is still visually identifiable */
+.header-actions .theme-btn::before{
+    content:"";
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    display:block;
+    margin:auto;
+    background:#64748b;
+}
+.header-actions .theme-btn[data-theme="default"]::before{background:#ef233c;}
+.header-actions .theme-btn[data-theme="green-neon"]::before{background:#00c878;}
+.header-actions .theme-btn[data-theme="neon-red"]::before{background:#ff0040;}
+.header-actions .theme-btn[data-theme="neon-blue"]::before{background:#00d4ff;}
+.header-actions .theme-btn[data-theme="neon-yellow"]::before{background:#ffdd00;}
+
+.header-actions .theme-divider{
+    height:26px !important;
+    width:1px !important;
+    margin:0 2px !important;
+    background:rgba(148,163,184,.28) !important;
+}
+
+.header-actions .download-btn{
+    padding:7px 13px !important;
+    min-height:30px !important;
+    border-radius:8px !important;
+    font-size:11px !important;
+    white-space:nowrap;
+}
+
+/* KPI: one level shorter, giving charts/tables more vertical room */
+.kpi-grid{
+    gap:9px !important;
+    margin-bottom:8px !important;
+}
+
+.kpi-card{
+    min-height:72px !important;
+    height:72px !important;
+    padding:8px 11px !important;
+    grid-template-columns:44px 1fr !important;
+    column-gap:9px !important;
+}
+
+.kpi-card .icon{
+    width:38px !important;
+    height:38px !important;
+    font-size:16px !important;
+}
+
+.kpi-card .label{
+    font-size:8px !important;
+    line-height:1.05 !important;
+    letter-spacing:.55px !important;
+}
+
+.kpi-card .value{
+    font-size:20px !important;
+    line-height:1.05 !important;
+}
+
+.kpi-card .sub{
+    font-size:8px !important;
+    line-height:1.05 !important;
+}
+
+/* Keep mobile header usable */
+@media (max-width:768px){
+    .header{
+        flex-direction:row !important;
+        align-items:center !important;
+    }
+    .header-right{
+        width:auto !important;
+        justify-content:flex-end !important;
+        flex-wrap:wrap;
+    }
+    .header-actions{
+        gap:6px !important;
+    }
+    .header-actions .theme-btn{
+        width:27px !important;
+        height:27px !important;
+    }
+    .header-actions .download-btn{
+        padding:6px 9px !important;
+        font-size:10px !important;
+    }
+    .kpi-card{
+        min-height:68px !important;
+        height:68px !important;
+        padding:7px 8px !important;
+    }
+}
+
+@media (max-width:480px){
+    .header-left h1{
+        font-size:16px !important;
+    }
+    .header-left .sub{
+        font-size:9px !important;
+    }
+    .date-badge{
+        display:none !important;
+    }
+    .header-actions .theme-divider{
+        display:none !important;
+    }
+    .header-actions .download-btn{
+        font-size:0 !important;
+        width:30px !important;
+        justify-content:center !important;
+        padding:6px !important;
+    }
+    .header-actions .download-btn i{
+        font-size:13px !important;
+        margin:0 !important;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -1819,6 +2013,30 @@ table tfoot td{
                     <i class="fa fa-calendar-o"></i>
                     <span id="reportDate">-</span>
                 </span>
+
+                <div class="header-actions">
+                    <div class="theme-toggle-area">
+                        <button class="theme-btn active" data-theme="default" onclick="setTheme('default')" aria-label="Corporate Dark">
+                            <span class="tooltip">Corporate Dark</span>
+                        </button>
+                        <button class="theme-btn" data-theme="green-neon" onclick="setTheme('green-neon')" aria-label="Green Neon">
+                            <span class="tooltip">Green Neon</span>
+                        </button>
+                        <button class="theme-btn" data-theme="neon-red" onclick="setTheme('neon-red')" aria-label="Neon Red">
+                            <span class="tooltip">Neon Red</span>
+                        </button>
+                        <button class="theme-btn" data-theme="neon-blue" onclick="setTheme('neon-blue')" aria-label="Neon Blue">
+                            <span class="tooltip">Neon Blue</span>
+                        </button>
+                        <button class="theme-btn" data-theme="neon-yellow" onclick="setTheme('neon-yellow')" aria-label="Neon Yellow">
+                            <span class="tooltip">Neon Yellow</span>
+                        </button>
+                    </div>
+                    <span class="theme-divider"></span>
+                    <button class="download-btn" onclick="downloadDashboard()">
+                        <i class="fa fa-download"></i> Download PNG
+                    </button>
+                </div>
             </div>
         </div>
         <!-- Upload & Filter -->
@@ -1829,29 +2047,6 @@ table tfoot td{
                 <select id="regionFilter">
                     <option value="all">All Regions</option>
                 </select>
-            </div>
-            <div class="download-area">
-                <div class="theme-toggle-area">
-                    <button class="theme-btn active" data-theme="default" onclick="setTheme('default')">
-                        <span class="tooltip">Corporate Dark</span>
-                    </button>
-                    <button class="theme-btn" data-theme="green-neon" onclick="setTheme('green-neon')">
-                        <span class="tooltip">Green Neon</span>
-                    </button>
-                    <button class="theme-btn" data-theme="neon-red" onclick="setTheme('neon-red')">
-                        <span class="tooltip">Neon Red</span>
-                    </button>
-                    <button class="theme-btn" data-theme="neon-blue" onclick="setTheme('neon-blue')">
-                        <span class="tooltip">Neon Blue</span>
-                    </button>
-                    <button class="theme-btn" data-theme="neon-yellow" onclick="setTheme('neon-yellow')">
-                        <span class="tooltip">Neon Yellow</span>
-                    </button>
-                </div>
-                <span class="theme-divider"></span>
-                <button class="download-btn" onclick="downloadDashboard()">
-                    <i class="fa fa-download"></i> Download PNG
-                </button>
             </div>
         </div>
         <!-- Tabs -->
@@ -3195,4 +3390,4 @@ table tfoot td{
         });
     </script>
 </body>
-</html>
+</html>               
