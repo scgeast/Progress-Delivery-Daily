@@ -1836,62 +1836,114 @@ table tfoot td{
     gap:6px !important;
 }
 
-/* Mode buttons: white center, colored border */
+/* =========================================================
+   MODE BUTTONS — ROUND STYLE
+   Sama seperti contoh: bulat, ring warna, tanpa kotak putih
+   ========================================================= */
 .header-actions .theme-btn{
-    width:30px !important;
-    height:30px !important;
-    border-radius:8px !important;
-    background:#ffffff !important;
+    width:24px !important;
+    height:24px !important;
+    min-width:24px !important;
+    min-height:24px !important;
+    padding:0 !important;
+    border-radius:50% !important;
+    background:rgba(5,15,28,.78) !important;
     border:2px solid #64748b !important;
-    box-shadow:0 3px 10px rgba(0,0,0,.18) !important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.04),
+               0 3px 10px rgba(0,0,0,.28) !important;
     position:relative;
     transition:all .22s ease !important;
 }
 
-/* Border colors per mode */
+/* Warna ring masing-masing mode */
 .header-actions .theme-btn[data-theme="default"]{
-    border-color:#ef233c !important;
+    border-color:#ff0000 !important;
 }
 .header-actions .theme-btn[data-theme="green-neon"]{
-    border-color:#00c878 !important;
+    border-color:#00e676 !important;
 }
 .header-actions .theme-btn[data-theme="neon-red"]{
-    border-color:#ff0040 !important;
+    border-color:#ff00cc !important;
 }
 .header-actions .theme-btn[data-theme="neon-blue"]{
-    border-color:#00d4ff !important;
+    border-color:#008cff !important;
 }
 .header-actions .theme-btn[data-theme="neon-yellow"]{
-    border-color:#ffdd00 !important;
+    border-color:#ffb800 !important;
 }
 
-.header-actions .theme-btn:hover{
-    transform:translateY(-2px) !important;
-    background:#ffffff !important;
-    box-shadow:0 6px 14px rgba(0,0,0,.25) !important;
-}
-
-.header-actions .theme-btn.active{
-    background:#ffffff !important;
-    transform:translateY(-1px) scale(1.04) !important;
-    box-shadow:0 0 0 2px rgba(255,255,255,.85),0 6px 15px rgba(0,0,0,.28) !important;
-}
-
-/* Small colored inner dot so the button is still visually identifiable */
+/* Titik tengah sangat kecil — tetap clean */
 .header-actions .theme-btn::before{
     content:"";
-    width:8px;
-    height:8px;
+    position:absolute;
+    width:6px;
+    height:6px;
     border-radius:50%;
-    display:block;
-    margin:auto;
-    background:#64748b;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    background:currentColor;
+    opacity:.9;
 }
-.header-actions .theme-btn[data-theme="default"]::before{background:#ef233c;}
-.header-actions .theme-btn[data-theme="green-neon"]::before{background:#00c878;}
-.header-actions .theme-btn[data-theme="neon-red"]::before{background:#ff0040;}
-.header-actions .theme-btn[data-theme="neon-blue"]::before{background:#00d4ff;}
-.header-actions .theme-btn[data-theme="neon-yellow"]::before{background:#ffdd00;}
+
+/* Warna titik tengah */
+.header-actions .theme-btn[data-theme="default"]::before{
+    background:#ff0000;
+}
+.header-actions .theme-btn[data-theme="green-neon"]::before{
+    background:#00e676;
+}
+.header-actions .theme-btn[data-theme="neon-red"]::before{
+    background:#ff00cc;
+}
+.header-actions .theme-btn[data-theme="neon-blue"]::before{
+    background:#008cff;
+}
+.header-actions .theme-btn[data-theme="neon-yellow"]::before{
+    background:#ffb800;
+}
+
+/* Hover */
+.header-actions .theme-btn:hover{
+    transform:scale(1.12) !important;
+    background:rgba(255,255,255,.025) !important;
+    box-shadow:0 0 10px currentColor,
+               0 4px 14px rgba(0,0,0,.32) !important;
+}
+
+/* Mode aktif — glow tipis, tetap bulat */
+.header-actions .theme-btn.active{
+    background:rgba(255,255,255,.035) !important;
+    transform:scale(1.08) !important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.35),
+               0 0 12px currentColor,
+               0 5px 15px rgba(0,0,0,.30) !important;
+}
+
+/* Warna glow */
+.header-actions .theme-btn[data-theme="default"]{
+    color:#ff0000 !important;
+}
+.header-actions .theme-btn[data-theme="green-neon"]{
+    color:#00e676 !important;
+}
+.header-actions .theme-btn[data-theme="neon-red"]{
+    color:#ff00cc !important;
+}
+.header-actions .theme-btn[data-theme="neon-blue"]{
+    color:#008cff !important;
+}
+.header-actions .theme-btn[data-theme="neon-yellow"]{
+    color:#ffb800 !important;
+}
+
+/* Divider lebih tipis agar 5 tombol terlihat seperti color selector */
+.header-actions .theme-divider{
+    height:24px !important;
+    width:1px !important;
+    margin:0 4px !important;
+    background:rgba(148,163,184,.25) !important;
+}
 
 .header-actions .theme-divider{
     height:26px !important;
@@ -3390,4 +3442,4 @@ table tfoot td{
         });
     </script>
 </body>
-</html>               
+</html> 
