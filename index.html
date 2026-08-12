@@ -1841,10 +1841,10 @@ table tfoot td{
    Sama seperti contoh: bulat, ring warna, tanpa kotak putih
    ========================================================= */
 .header-actions .theme-btn{
-    width:24px !important;
-    height:24px !important;
-    min-width:24px !important;
-    min-height:24px !important;
+    width:26px !important;
+    height:26px !important;
+    min-width:26px !important;
+    min-height:26px !important;
     padding:0 !important;
     border-radius:50% !important;
     background:rgba(5,15,28,.78) !important;
@@ -1903,21 +1903,48 @@ table tfoot td{
     background:#ffb800;
 }
 
-/* Hover */
+/* Hover — membesar + glow */
 .header-actions .theme-btn:hover{
-    transform:scale(1.12) !important;
+    transform:scale(1.16) !important;
     background:rgba(255,255,255,.025) !important;
-    box-shadow:0 0 10px currentColor,
-               0 4px 14px rgba(0,0,0,.32) !important;
+    box-shadow:
+        0 0 5px currentColor,
+        0 0 14px currentColor,
+        0 4px 14px rgba(0,0,0,.32) !important;
 }
 
-/* Mode aktif — glow tipis, tetap bulat */
+/* Mode aktif — ring + glow lebih kuat */
 .header-actions .theme-btn.active{
     background:rgba(255,255,255,.035) !important;
-    transform:scale(1.08) !important;
-    box-shadow:0 0 0 1px rgba(255,255,255,.35),
-               0 0 12px currentColor,
-               0 5px 15px rgba(0,0,0,.30) !important;
+    transform:scale(1.10) !important;
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.40),
+        0 0 6px currentColor,
+        0 0 18px currentColor,
+        0 5px 16px rgba(0,0,0,.30) !important;
+}
+
+/* Halo lembut di mode aktif */
+.header-actions .theme-btn.active::after{
+    content:"";
+    position:absolute;
+    inset:-5px;
+    border-radius:50%;
+    border:1px solid currentColor;
+    opacity:.28;
+    animation:themePulse 1.8s ease-in-out infinite;
+    pointer-events:none;
+}
+
+@keyframes themePulse{
+    0%,100%{
+        transform:scale(.92);
+        opacity:.16;
+    }
+    50%{
+        transform:scale(1.08);
+        opacity:.42;
+    }
 }
 
 /* Warna glow */
@@ -3442,4 +3469,4 @@ table tfoot td{
         });
     </script>
 </body>
-</html> 
+</html>
