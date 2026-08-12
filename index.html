@@ -1841,10 +1841,10 @@ table tfoot td{
    Sama seperti contoh: bulat, ring warna, tanpa kotak putih
    ========================================================= */
 .header-actions .theme-btn{
-    width:26px !important;
-    height:26px !important;
-    min-width:26px !important;
-    min-height:26px !important;
+    width:28px !important;
+    height:28px !important;
+    min-width:28px !important;
+    min-height:28px !important;
     padding:0 !important;
     border-radius:50% !important;
     background:rgba(5,15,28,.78) !important;
@@ -3469,4 +3469,45 @@ table tfoot td{
         });
     </script>
 </body>
-</html>
+</html>     
+
+/* =========================================================
+   SMOOTH THEME TRANSITION
+   ========================================================= */
+:root{--theme-transition:420ms cubic-bezier(.22,.61,.36,1)}
+body,.dashboard,.card,.kpi-card,.chart-card,.table-card,.findings-card,.summary-card,
+.tabs,.tab-btn,.upload-area,.upload-area input,.upload-area select,.date-badge,
+.download-btn,.theme-divider,table,thead,tbody,tr,th,td,.section-title,.card-title,
+.kpi-value,.kpi-label{
+    transition:background-color var(--theme-transition),background var(--theme-transition),
+    border-color var(--theme-transition),box-shadow var(--theme-transition),color var(--theme-transition),
+    fill var(--theme-transition),stroke var(--theme-transition) !important;
+}
+.theme-transition-flash{position:fixed;inset:0;z-index:99999;pointer-events:none;background:var(--theme-flash,transparent);opacity:0;animation:themeFlash 420ms ease-out}
+@keyframes themeFlash{0%{opacity:.10}100%{opacity:0}}
+.header-actions .theme-btn:active{transform:scale(.94)!important}
+@keyframes activeThemeGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+.header-actions .theme-btn.active{animation:activeThemeGlow 2.2s ease-in-out infinite}
+
+
+<script>
+/* =========================================================
+   SMOOTH THEME SWITCHER
+   ========================================================= */
+(function(){
+    const themeColors={default:'#ff0000','green-neon':'#00e676','neon-red':'#ff00cc','neon-blue':'#008cff','neon-yellow':'#ffb800'};
+    window.smoothThemeTransition=function(theme){
+        document.documentElement.style.setProperty('--theme-flash',themeColors[theme]||'#008cff');
+        const old=document.querySelector('.theme-transition-flash');
+        if(old) old.remove();
+        const flash=document.createElement('div');
+        flash.className='theme-transition-flash';
+        document.body.appendChild(flash);
+        setTimeout(()=>flash.remove(),450);
+    };
+    document.addEventListener('click',function(e){
+        const btn=e.target.closest('.theme-btn');
+        if(btn) smoothThemeTransition(btn.dataset.theme);
+    },true);
+})();
+</script>
