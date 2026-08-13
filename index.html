@@ -2590,6 +2590,14 @@ table tfoot td{
                 // Better rendering options
                 onclone: function(doc) {
                     // Ensure all charts are rendered properly
+                    const chartContainers = doc.querySelectorAll('.chart-container');
+                    chartContainers.forEach(container => {
+                        container.style.overflow = 'visible';
+                    });
+                    const chartCanvases = doc.querySelectorAll('.chart-container canvas');
+                    chartCanvases.forEach(canvas => {
+                        canvas.style.overflow = 'visible';
+                    });
                     const kpiCards = doc.querySelectorAll('.kpi-card');
                     kpiCards.forEach(card => {
                         card.style.background = colors.cardBg;
@@ -2904,9 +2912,9 @@ table tfoot td{
                     layout: {
                         padding: {
                             left: 10,
-                            right: 30,
-                            top: 10,
-                            bottom: 10
+                            right: 62,
+                            top: 14,
+                            bottom: 12
                         }
                     },
                     scales: {
@@ -2918,7 +2926,9 @@ table tfoot td{
                                 color: tickColor
                             },
                             afterFit: function(axis) {
-                                axis.max += 5;
+                                // Extra headroom so the right-side data labels
+                                // never touch/cut against the canvas edge.
+                                axis.max += 10;
                             }
                         },
                         y: {
@@ -2938,7 +2948,9 @@ table tfoot td{
                             color: labelColor,
                             font: { weight: '700', size: 11 },
                             formatter: v => v + '%',
-                            offset: 2
+                            offset: 5,
+                            clamp: false,
+                            clip: false
                         }
                     }
                 },
@@ -3181,9 +3193,17 @@ table tfoot td{
                     responsive: true,
                     maintainAspectRatio: false,
                     devicePixelRatio: 4, // Increased for sharper rendering
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 62,
+                            top: 12,
+                            bottom: 10
+                        }
+                    },
                     scales: {
                         x: {
-                            max: 40,
+                            max: 45,
                             grid: { color: gridColor },
                             ticks: { 
                                 font: { size: 9 },
@@ -3205,7 +3225,10 @@ table tfoot td{
                             align: 'right',
                             color: labelColor,
                             font: { weight: '700', size: 11 },
-                            formatter: v => v + '%'
+                            formatter: v => v + '%',
+                            offset: 5,
+                            clamp: false,
+                            clip: false
                         }
                     }
                 },
@@ -3365,9 +3388,9 @@ table tfoot td{
                     layout: {
                         padding: {
                             left: 10,
-                            right: 30,
-                            top: 15,
-                            bottom: 15
+                            right: 18,
+                            top: 34,
+                            bottom: 18
                         }
                     },
                     scales: {
@@ -3384,6 +3407,10 @@ table tfoot td{
                             }
                         },
                         y: {
+                            suggestedMax: (() => {
+                                const maxRemain = Math.max(...(remainValues.length ? remainValues : [0]));
+                                return maxRemain > 0 ? maxRemain * 1.14 : 10;
+                            })(),
                             grid: { color: gridColor },
                             ticks: { 
                                 font: { size: 10, weight: '600' },
@@ -3401,8 +3428,10 @@ table tfoot td{
                             color: labelColor,
                             font: { weight: '700', size: 11 },
                             formatter: v => v > 0 ? formatNumberDec(v) : '',
-                            offset: 3,
-                            padding: 2
+                            offset: 4,
+                            padding: 2,
+                            clamp: false,
+                            clip: false
                         }
                     }
                 },
@@ -3511,3 +3540,5 @@ body,.dashboard,.card,.kpi-card,.chart-card,.table-card,.findings-card,.summary-
     },true);
 })();
 </script>
+</body>
+</html>
